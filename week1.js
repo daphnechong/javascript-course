@@ -1,40 +1,68 @@
 (function() {
-	function myMax(numbers) {
-		var maximum = numbers[0];
-
-		for (var i = 1; i < numbers.length; i++) {
-			if (numbers[i] > maximum) {
-				maximum = numbers[i];
-			}
-		}
-		return maximum;
-	}
-
-	function vowel_count(input) {
-		var count = 0;
-		var vowels = ['a', 'e', 'i', 'o', 'u'];
-
-		for (var i = 0; i < input.length; i++) {
-			if (vowels.indexOf(input[i].toLowerCase()) > -1) count++; 
+	function calculator() {
+		function add(a, b) {
+			return a + b;
 		}
 
-		return count;
-	}
-
-	function reverse(input) {
-		var reversed = '';
-
-		for (var i = input.length - 1; i >= 0; i--) {
-			reversed += input[i];
+		function subtract(a, b) {
+			return a - b;
 		}
-		return reversed;
+
+		// function multiply(i) {
+		// 	number = number * i;
+		// }
+
+		// function divide(i) {
+		// 	number = number / i;
+		// }
+
+		return {
+			add: add,
+			subtract: subtract,
+			multiply: multiply,
+			divide: divide
+		};
 	}
 
-	console.log(myMax([4,1,2,3,-5]));
-	console.log(myMax([]));
-	console.log(vowel_count("awio"));
-	console.log(vowel_count(""));
-	console.log(reverse("abc"));
-	console.log(reverse("this is a horse"));
+	var calculator = calculator();
+	var currentNumber = ''
+	var firstNumber = 0;
+	var secondNumber = 0;
+	var numbers = [];
+	var operators = [];
+	
+	function appendNumber(n) {
+		currentNumber += n;
+	}
+
+	function appendOperator(o) {
+		operators.push(o);
+		numbers.push(parseInt(currentNumber));
+		currentNumber = '';
+	}
+
+	function equals() {
+		numbers.push(parseInt(currentNumber));
+
+		var total = numbers[0];
+		for(var i = 1; i < numbers.length; i++) {
+			var operator = operators.shift();
+			total = calculator[operator](total, numbers[i]);
+		}
+		return total;
+	}
+
+	appendNumber(5);
+	appendNumber(5);
+	appendOperator('add');
+	appendNumber(4)
+	appendNumber(5)
+	appendOperator('add');
+	appendNumber(1);
+	appendOperator('subtract');
+	appendNumber(2);
+	var total = equals();
+	console.log(total)
+//	document.getElementById("add").addEventListener('click', add);
 }());
 
