@@ -8,13 +8,13 @@
 			return a - b;
 		}
 
-		// function multiply(i) {
-		// 	number = number * i;
-		// }
+		function multiply(a, b) {
+			return a * b;
+		}
 
-		// function divide(i) {
-		// 	number = number / i;
-		// }
+		function divide(a, b) {
+			return a / b;
+		}
 
 		return {
 			add: add,
@@ -26,8 +26,6 @@
 
 	var calculator = calculator();
 	var currentNumber = ''
-	var firstNumber = 0;
-	var secondNumber = 0;
 	var numbers = [];
 	var operators = [];
 	
@@ -61,6 +59,12 @@
 	appendNumber(1);
 	appendOperator('subtract');
 	appendNumber(2);
+	appendOperator('multiply');
+	appendNumber(3);
+	appendNumber(1);
+	appendOperator('divide');
+	appendNumber(2);
+	appendNumber(5);
 	var total = equals();
 	console.log(total)
 //	document.getElementById("add").addEventListener('click', add);
