@@ -41,6 +41,13 @@
 		currentNumber = '';
 	}
 
+	function clearCalculations() {
+		numbers = [];
+		currentNumber = '';
+		operators = [];
+		updateResultWindow('');
+	}
+
 	function equals() {
 		numbers.push(parseInt(currentNumber));
 
@@ -50,9 +57,7 @@
 			total = calculator[operator](total, numbers[i]);
 		}
 
-		numbers = [];
-		currentNumber = '';
-		console.log(total);
+		clearCalculations();
 		return total;
 	}
 	
@@ -74,7 +79,11 @@
 	});
 
 	document.getElementById("equals").addEventListener('click', function() { 
-		document.getElementById("result").innerHTML = equals();
+		updateResultWindow(equals());
+	});
+
+	document.getElementById("clear").addEventListener('click', function() { 
+		clearCalculations();
 	});
 
 }());
