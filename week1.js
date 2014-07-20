@@ -43,7 +43,7 @@
 
 	function equals() {
 		numbers.push(parseInt(currentNumber));
-		console.log(numbers)
+
 		var total = numbers[0];
 		for(var i = 1; i < numbers.length; i++) {
 			var operator = operators.shift();
@@ -51,8 +51,13 @@
 		}
 
 		numbers = [];
+		currentNumber = '';
 		console.log(total);
 		return total;
+	}
+	
+	function updateResultWindow(result) {
+		document.getElementById("result").innerHTML = result;
 	}
 
 	function subscribeClickEvents(className, func) {
@@ -63,7 +68,10 @@
 	}
 
 	subscribeClickEvents("operator", appendOperator);
-	subscribeClickEvents("number", appendNumber);
+	subscribeClickEvents("number", function(id) { 
+		appendNumber(id); 
+		updateResultWindow(currentNumber);
+	});
 
 	document.getElementById("equals").addEventListener('click', function() { 
 		document.getElementById("result").innerHTML = equals();
