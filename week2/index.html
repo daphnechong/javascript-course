@@ -1,7 +1,32 @@
 <html>
+<head>
+	<style type="text/css">
+	body { font-family: Helvetica, sans-serif }
+
+	h1 { text-align: center; }
+	.subheading { text-align: center; }
+	</style>
+</head>
 <body>
 
 	<div id="content"></div>
 	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>	
+	<script>
+	$(function() {
+
+		var heading = $('<h1>').text('Le Relais de Venise');
+		
+		var subheading = $('<div>')
+			.text('We are French. We like steak.')
+			.addClass('subheading');
+
+		$('#content')
+			.append(heading)
+			.append(subheading);
+
+			// .append('<div>We are French. We like steak.</div>')
+			// .addClass('subheading')
+	})
+	</script>
 </body>
 </html>
