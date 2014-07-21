@@ -37,10 +37,11 @@
 				id: 'about', 
 				contents: $('<div>').addClass('contents').text('We are French. We like steak.')});
 
+			var image = $('<img>').attr('src', 'images/steakfrites.JPG');
 			tabContents.push({ 
 				title: 'Menu', 
 				id: 'menu', 
-				contents: $('<div>').addClass('contents').text('Salad. Steak. Fries. That\'s about it.')});
+				contents: $('<div>').addClass('contents').text('Salad. Steak. Fries. That\'s about it.').append(image)});
 
 			tabContents.push({
 				title: 'Contact', 
