@@ -34,8 +34,8 @@
 
 		function clearCalculations() {
 			numbers = [];
-			currentNumber = '';
 			operators = [];
+			currentNumber = '';
 		}
 
 		function equals() {
@@ -46,6 +46,7 @@
 				var operator = operators.shift();
 
 				// not sure how to just execute operator(total, numbers[i]) without having to qualify "this"? I get a "string is not a function" error
+				// i also had to expose add/subtract/divide/multiply to get this line to work. Is there a way you can call "private" functions
 				total = this[operator](total, numbers[i]); 
 			}
 
@@ -58,7 +59,7 @@
 			appendOperator: appendOperator,
 			clear: clearCalculations,
 			equals: equals,
-			currentValue: currentNumber,
+			currentValue: function() { return currentNumber; },
 			add: add,
 			subtract: subtract,
 			divide: divide,
@@ -81,9 +82,10 @@
 	}
 
 	subscribeClickEvents("operator", calculator.appendOperator);
+
 	subscribeClickEvents("number", function(id) { 
-		calculator.appendNumber(id); 
-		updateResultWindow(calculator.currentValue);
+		calculator.appendNumber(id);
+		updateResultWindow(calculator.currentValue());
 	});
 
 	document.getElementById("equals").addEventListener('click', function() { 
