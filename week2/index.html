@@ -21,46 +21,46 @@
 	<div id="content"></div>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script>
+	function createTab(tabs, heading, anchor) {
+		var tabLink = $('<a>').attr('href', '#' + anchor).text(heading);
+		tabs.children('ul').first().append('<li>');
+		tabs.find('li').eq($('li', tabs).length-1).append(tabLink);
+		tabLink.click(function() { showTab(tabs, anchor) });
+	}
+
+	function setupTabContents(tabs) {
+
+		tabContents.push({ 
+			title: 'About', 
+			id: 'about', 
+			contents: $('<div>').addClass('contents').text('We are French. We like steak.')});
+
+		var image = $('<img>').attr('src', 'images/steakfrites.JPG');
+		tabContents.push({ 
+			title: 'Menu', 
+			id: 'menu', 
+			contents: $('<div>').addClass('contents').text('Salad. Steak. Fries. That\'s about it.').append(image)});
+
+		tabContents.push({
+			title: 'Contact', 
+			id: 'contact', 
+			contents: $('<div>').addClass('contents').text('Marlybone, The City, Canary Wharf')});
+
+		tabContents.forEach(function(element, index, array) { createTab(tabs, element.title, element.id); });
+	}
+
+	function showTab(tabs, anchor) {
+		$('.contents').remove();
+		var result = $.grep(tabContents, function(e) { return e.id === anchor});
+		if (!result.length) return;
+
+		var data = result[0];
+		var tab = data.contents.attr('id', data.id); 
+		tabs.append(tab);
+	}
+
 	var tabContents = [], heading, tabs;
 	$(function() {
-
-		function createTab(tabs, heading, anchor) {
-			var tabLink = $('<a>').attr('href', '#' + anchor).text(heading);
-			tabs.children('ul').first().append('<li>');
-			tabs.find('li').eq($('li', tabs).length-1).append(tabLink);
-			tabLink.click(function() { showTab(tabs, anchor) });
-		}
-
-		function setupTabContents(tabs) {
-			tabContents.push({ 
-				title: 'About', 
-				id: 'about', 
-				contents: $('<div>').addClass('contents').text('We are French. We like steak.')});
-
-			var image = $('<img>').attr('src', 'images/steakfrites.JPG');
-			tabContents.push({ 
-				title: 'Menu', 
-				id: 'menu', 
-				contents: $('<div>').addClass('contents').text('Salad. Steak. Fries. That\'s about it.').append(image)});
-
-			tabContents.push({
-				title: 'Contact', 
-				id: 'contact', 
-				contents: $('<div>').addClass('contents').text('Marlybone, The City, Canary Wharf')});
-
-			tabContents.forEach(function(element, index, array) { createTab(tabs, element.title, element.id); });
-		}
-
-		function showTab(tabs, anchor) {
-			$('.contents').remove();
-			var result = $.grep(tabContents, function(e) { return e.id === anchor});
-			if (!result.length) return;
-
-			var data = result[0];
-			var tab = data.contents.attr('id', data.id); 
-			tabs.append(tab);
-		}
-
 
 		heading = $('<h1>').text('Le Relais de Venise');
 		tabs = $('<div>').attr('id', 'tabs').append('<ul>');
@@ -75,6 +75,9 @@
 
 		// can you do a javascript forEach on an array that doesn't have numeric indexes? e.g. tabContents['menu'], tabContents['about']
 
+		// for(var key in tabContents) {
+		// 	tabContents[key] ...
+		// }
 		// why doesn't this work? I get 'undefined is not a function' i.e. array.find
 		//tabContents.find(function(element) { element.id == anchor});
 
