@@ -1,10 +1,8 @@
 .cell {
 	width:15px;
 	height: 15px;
-	border: 1.5px solid black;
-	/*float:left;*/
+	border: 1px solid black;
 	display:inline-block;
-	/*ont-family: arial, sans-serif;*/
 	line-height: 10px;
 	text-align: center;
 	vertical-align: middle;

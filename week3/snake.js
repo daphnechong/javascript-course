@@ -1,8 +1,19 @@
-var grid;
+var grid = [];
+
+var snake = { 
+	direction: 'r',
+	coordinates: [[20,20]],
+	symbol: 'o'
+}
+
+function subscribeToArrowKeys() {
+	$( 'body' ).keydown(function(e) {
+  		console.log(e.originalEvent.keyIdentifier);
+  		changeDirection(e.originalEvent.keyIdentifier);
+	});
+}
 
 function setupGrid() {
-	grid = [];
-	
 	for (var i = 0; i < 40; i++) {
 		grid[i] = [];
 		for (var j = 0; j < 40; j++) {
@@ -12,34 +23,22 @@ function setupGrid() {
 }
 
 function render() { 
-
+	$('#container').empty();
 	for (var i = 0; i < grid.length; i++) {
 		var row = $('<div>').addClass('row');
 		$('#container').append(row);
 		for (var j = 0; j < grid[i].length; j++) {
 			var cell = $('<div>').addClass('cell').text(grid[i][j]);
 			row.append(cell);
-			//$('.cell').css(' border', '1px solid black')
 		}
 	}
 }
-function setSquare(row, column, value){
+
+function setGridSquare(row, column, value){
 	grid[row][column] = value;
 }
-function initialPosition(valueX, valueY) {
-	var positionX = valueX;
-	var positionY = valueY;
-	return [[positionX,positionY]];
-}
+ 
 
-var snake = { 
-	direction: 'r',
-	coordinates: initialPosition(20, 20),
-	symbol: 'o'
-} 
-	/* Create a Javascript object to represent your snake. Give it an initial position of [20,20] 
-	and an initial direction to the right (r). Also include a variable to represent the current snake, 
-	which will be an array of coordinate pairs (so an array of arrays, e.g. [[20,20]] to start)*/
 function changeDirection(directionValue) {
 	var newDirection = null;
 	if(directionValue==="Down"){
@@ -55,18 +54,34 @@ function changeDirection(directionValue) {
 		newDirection = 'r';
 	}
 	snake.direction=newDirection;
+	move();
 	console.log(snake.direction)
+}
+
+function move(){
+	switch (snake.direction) {
+		case 'd': 
+			snake.coordinates[0][0] = snake.coordinates[0][0]+1;
+			break;
+		case 'u': 
+			snake.coordinates[0][0] = snake.coordinates[0][0]-1;
+			break;
+		case 'l': 
+			snake.coordinates[0][1] = snake.coordinates[0][1]-1;
+			break;
+		case 'r': 
+			snake.coordinates[0][1] = snake.coordinates[0][1]+1;
+			break;
+	}
+	var point = snake.coordinates[0];
+	setGridSquare(point[0],point[1],snake.symbol);
+
+	render();
 }
 
 
 $(document).ready(function() {
 	setupGrid();
-	// [20, 20]
-	$( 'body' ).keydown(function(e) {
-  		console.log(e.originalEvent.keyIdentifier);
-  		changeDirection(e.originalEvent.keyIdentifier);
-	});
-	var snakeStart = snake.coordinates[0];
-	setSquare(snakeStart[0],snakeStart[1],snake.symbol);
+	subscribeToArrowKeys();
 	render();
 })
