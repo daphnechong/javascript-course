@@ -23,9 +23,12 @@
 	<script>
 	function createTab(tabs, heading, anchor) {
 		var tabLink = $('<a>').attr('href', '#' + anchor).text(heading);
-		tabs.children('ul').first().append('<li>');
-		tabs.find('li').eq($('li', tabs).length-1).append(tabLink);
-		tabLink.click(function() { showTab(tabs, anchor) });
+		var listItem = $('<li>').append(tabLink);
+		tabs.children('ul').first().append(listItem);
+		
+		tabLink.click(function() { 
+			showTab(tabs, anchor) 
+		});
 	}
 
 	function setupTabContents(tabs) {
@@ -46,7 +49,9 @@
 			id: 'contact', 
 			contents: $('<div>').addClass('contents').text('Marlybone, The City, Canary Wharf')});
 
-		tabContents.forEach(function(element) { createTab(tabs, element.title, element.id); });
+		tabContents.forEach(function(element) { 
+			createTab(tabs, element.title, element.id); 
+		});
 	}
 
 	function showTab(tabs, anchor) {

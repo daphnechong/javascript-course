@@ -2,14 +2,14 @@ var grid = [];
 
 var snake = { 
 	direction: 'r',
-	coordinates: [[20,20]],
+	coordinates: [{ x:20, y:20 }, { x:20, y:21}],
 	symbol: 'o'
 }
 
 function subscribeToArrowKeys() {
 	$( 'body' ).keydown(function(e) {
-  		console.log(e.originalEvent.keyIdentifier);
   		changeDirection(e.originalEvent.keyIdentifier);
+  		move();
 	});
 }
 
@@ -19,6 +19,13 @@ function setupGrid() {
 		for (var j = 0; j < 40; j++) {
 			grid[i][j] = ' ';
 		}
+	}
+}
+
+function setupSnake() {
+	for (var i = 0; i < snake.coordinates.length; i++) {
+		var point = snake.coordinates[i];
+		setGridSquare(point.x, point.y, snake.symbol);
 	}
 }
 
@@ -39,49 +46,46 @@ function setGridSquare(row, column, value){
 }
  
 
-function changeDirection(directionValue) {
-	var newDirection = null;
-	if(directionValue==="Down"){
-		newDirection = 'd';
-	}
-	else if(directionValue==="Up"){
-		newDirection = 'u';
-	}
-	else if(directionValue==="Left"){
-		newDirection = 'l';
-	}
-	else if(directionValue==="Right"){
-		newDirection = 'r';
-	}
-	snake.direction=newDirection;
-	move();
-	console.log(snake.direction)
+function changeDirection(direction) {
+	snake.direction = direction[0].toLowerCase();
 }
 
 function move(){
+	var oldPoint = snake.coordinates.shift();
+	point = snake.coordinates[0];
+	setGridSquare(oldPoint.x, oldPoint.y, ' ');
+
+	var newPoint = { 
+		x: point.x, 
+		y: point.y 
+	};
+
 	switch (snake.direction) {
 		case 'd': 
-			snake.coordinates[0][0] = snake.coordinates[0][0]+1;
+			newPoint.x++;
 			break;
 		case 'u': 
-			snake.coordinates[0][0] = snake.coordinates[0][0]-1;
+			newPoint.x--;
 			break;
-		case 'l': 
-			snake.coordinates[0][1] = snake.coordinates[0][1]-1;
+		case 'l':
+			newPoint.y--;
 			break;
 		case 'r': 
-			snake.coordinates[0][1] = snake.coordinates[0][1]+1;
+			newPoint.y++;
 			break;
 	}
-	var point = snake.coordinates[0];
-	setGridSquare(point[0],point[1],snake.symbol);
 
+	snake.coordinates.push(newPoint);
+	console.log(snake.coordinates[0], snake.coordinates[1])
+
+	setupSnake();
 	render();
 }
 
 
 $(document).ready(function() {
 	setupGrid();
+	setupSnake();
 	subscribeToArrowKeys();
 	render();
 })
