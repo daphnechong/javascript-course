@@ -1,4 +1,5 @@
 var grid = [];
+var gridSize = 40;
 
 var snake = { 
 	direction: 'r',
@@ -6,17 +7,23 @@ var snake = {
 	symbol: 'o'
 }
 
+function isArrowKey(e) {
+	return e.keyCode >= 37 && e.keyCode <= 40
+}
+
 function subscribeToArrowKeys() {
 	$( 'body' ).keydown(function(e) {
-  		changeDirection(e.originalEvent.keyIdentifier);
-  		move();
+		if (isArrowKey(e)) {
+	  		changeDirection(e.originalEvent.keyIdentifier);
+	  		move();
+	  	}
 	});
 }
 
 function setupGrid() {
-	for (var i = 0; i < 40; i++) {
+	for (var i = 0; i < gridSize; i++) {
 		grid[i] = [];
-		for (var j = 0; j < 40; j++) {
+		for (var j = 0; j < gridSize; j++) {
 			grid[i][j] = ' ';
 		}
 	}
@@ -30,7 +37,6 @@ function placeSnakeOnGrid() {
 }
 
 function render() { 
-	$('#container').empty();
 	for (var i = 0; i < grid.length; i++) {
 		var row = $('<div>').addClass('row');
 		$('#container').append(row);
@@ -41,8 +47,11 @@ function render() {
 	}
 }
 
-function setGridSquare(x, y, value){
+function setGridSquare(x, y, value) {
 	grid[x][y] = value;
+	var row = $('.row').eq(y);
+	var cell = row.find('.cell').eq(x);
+	cell.text(value);
 }
  
 
@@ -52,8 +61,6 @@ function changeDirection(direction) {
 
 function move(){
 	var oldPoint = snake.coordinates.pop();
-	setGridSquare(oldPoint.x, oldPoint.y, ' ');
-	
 	var point = snake.coordinates[0];
 	var newPoint = { 
 		x: point.x, 
@@ -76,8 +83,8 @@ function move(){
 	}
 
 	snake.coordinates.unshift(newPoint);
-	placeSnakeOnGrid();
-	render();
+	setGridSquare(oldPoint.x, oldPoint.y, ' ');
+	setGridSquare(newPoint.x, newPoint.y, snake.symbol);
 }
 
 
@@ -86,4 +93,5 @@ $(document).ready(function() {
 	placeSnakeOnGrid();
 	subscribeToArrowKeys();
 	render();
+	setInterval(move, 1000);
 })
