@@ -2,7 +2,7 @@ var grid = [];
 
 var snake = { 
 	direction: 'r',
-	coordinates: [{ x:20, y:20 }, { x:20, y:21}],
+	coordinates: [ {x: 1, y: 20}, {x: 1, y:21}, {x:1, y:22} ],
 	symbol: 'o'
 }
 
@@ -22,7 +22,7 @@ function setupGrid() {
 	}
 }
 
-function setupSnake() {
+function placeSnakeOnGrid() {
 	for (var i = 0; i < snake.coordinates.length; i++) {
 		var point = snake.coordinates[i];
 		setGridSquare(point.x, point.y, snake.symbol);
@@ -35,14 +35,14 @@ function render() {
 		var row = $('<div>').addClass('row');
 		$('#container').append(row);
 		for (var j = 0; j < grid[i].length; j++) {
-			var cell = $('<div>').addClass('cell').text(grid[i][j]);
+			var cell = $('<div>').addClass('cell').text(grid[j][i]);
 			row.append(cell);
 		}
 	}
 }
 
-function setGridSquare(row, column, value){
-	grid[row][column] = value;
+function setGridSquare(x, y, value){
+	grid[x][y] = value;
 }
  
 
@@ -51,10 +51,10 @@ function changeDirection(direction) {
 }
 
 function move(){
-	var oldPoint = snake.coordinates.shift();
-	point = snake.coordinates[0];
+	var oldPoint = snake.coordinates.pop();
 	setGridSquare(oldPoint.x, oldPoint.y, ' ');
-
+	
+	var point = snake.coordinates[0];
 	var newPoint = { 
 		x: point.x, 
 		y: point.y 
@@ -62,30 +62,28 @@ function move(){
 
 	switch (snake.direction) {
 		case 'd': 
-			newPoint.x++;
+			newPoint.y++;
 			break;
 		case 'u': 
-			newPoint.x--;
-			break;
-		case 'l':
 			newPoint.y--;
 			break;
+		case 'l':
+			newPoint.x--;
+			break;
 		case 'r': 
-			newPoint.y++;
+			newPoint.x++;
 			break;
 	}
 
-	snake.coordinates.push(newPoint);
-	console.log(snake.coordinates[0], snake.coordinates[1])
-
-	setupSnake();
+	snake.coordinates.unshift(newPoint);
+	placeSnakeOnGrid();
 	render();
 }
 
 
 $(document).ready(function() {
 	setupGrid();
-	setupSnake();
+	placeSnakeOnGrid();
 	subscribeToArrowKeys();
 	render();
 })
