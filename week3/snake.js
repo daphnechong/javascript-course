@@ -7,17 +7,28 @@ var snake = {
 	symbol: 'o'
 }
 
-function isArrowKey(e) {
-	return e.keyCode >= 37 && e.keyCode <= 40
+function game() {
+
+	function isArrowKey(e) {
+		return e.keyCode >= 37 && e.keyCode <= 40
+	}
+
+	function subscribe(handler) {
+		$( 'body' ).keydown(function(e) {
+			if (isArrowKey(e)) {
+				handler(e.originalEvent.keyIdentifier);	  	
+		  	}
+		});
+	}	
+
+	return {
+		subscribeToArrowKeys : subscribe
+	}
 }
 
-function subscribeToArrowKeys() {
-	$( 'body' ).keydown(function(e) {
-		if (isArrowKey(e)) {
-	  		changeDirection(e.originalEvent.keyIdentifier);
-	  		move();
-	  	}
-	});
+function handleArrowKey(newDirection) {
+	changeDirection(newDirection);
+	move();
 }
 
 function setupGrid() {
@@ -62,6 +73,7 @@ function changeDirection(direction) {
 function move(){
 	var oldPoint = snake.coordinates.pop();
 	var point = snake.coordinates[0];
+
 	var newPoint = { 
 		x: point.x, 
 		y: point.y 
@@ -89,9 +101,10 @@ function move(){
 
 
 $(document).ready(function() {
+	var g = game();
 	setupGrid();
 	placeSnakeOnGrid();
-	subscribeToArrowKeys();
+	g.subscribeToArrowKeys(handleArrowKey);
 	render();
 	setInterval(move, 1000);
 })
