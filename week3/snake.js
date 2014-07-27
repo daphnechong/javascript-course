@@ -1,10 +1,58 @@
 var grid = [];
 var gridSize = 40;
+var s = snake();
+// var snake = { 
+// 	direction: 'r',
+// 	coordinates: [ {x: 1, y: 20}, {x: 1, y:21}, {x:1, y:22} ],
+// 	symbol: 'o'
+// }
 
-var snake = { 
-	direction: 'r',
-	coordinates: [ {x: 1, y: 20}, {x: 1, y:21}, {x:1, y:22} ],
-	symbol: 'o'
+function snake() {
+	var direction = 'r';
+	var coordinates = [ {x: 1, y: 20}, {x: 1, y:21}, {x:1, y:22} ];
+
+	function move() {
+		var oldPoint = coordinates.pop();
+		var point = coordinates[0];
+
+		var newPoint = { 
+			x: point.x, 
+			y: point.y 
+		};
+
+		switch (direction) {
+			case 'd': 
+				newPoint.y++;
+				break;
+			case 'u': 
+				newPoint.y--;
+				break;
+			case 'l':
+				newPoint.x--;
+				break;
+			case 'r': 
+				newPoint.x++;
+				break;
+		}
+
+		coordinates.unshift(newPoint);
+
+		return {
+			oldPoint: oldPoint,
+			newPoint: newPoint
+		}
+	}
+
+	function changeDirection(newDirection) {
+		direction = newDirection[0].toLowerCase();
+	}
+
+	return {
+		coordinates: coordinates,
+		symbol: 'o',
+		move: move,
+		changeDirection: changeDirection
+	}
 }
 
 function game() {
@@ -27,7 +75,7 @@ function game() {
 }
 
 function handleArrowKey(newDirection) {
-	changeDirection(newDirection);
+	s.changeDirection(newDirection);
 	move();
 }
 
@@ -41,9 +89,9 @@ function setupGrid() {
 }
 
 function placeSnakeOnGrid() {
-	for (var i = 0; i < snake.coordinates.length; i++) {
-		var point = snake.coordinates[i];
-		setGridSquare(point.x, point.y, snake.symbol);
+	for (var i = 0; i < s.coordinates.length; i++) {
+		var point = s.coordinates[i];
+		setGridSquare(point.x, point.y, s.symbol);
 	}
 }
 
@@ -66,37 +114,10 @@ function setGridSquare(x, y, value) {
 }
  
 
-function changeDirection(direction) {
-	snake.direction = direction[0].toLowerCase();
-}
-
 function move(){
-	var oldPoint = snake.coordinates.pop();
-	var point = snake.coordinates[0];
-
-	var newPoint = { 
-		x: point.x, 
-		y: point.y 
-	};
-
-	switch (snake.direction) {
-		case 'd': 
-			newPoint.y++;
-			break;
-		case 'u': 
-			newPoint.y--;
-			break;
-		case 'l':
-			newPoint.x--;
-			break;
-		case 'r': 
-			newPoint.x++;
-			break;
-	}
-
-	snake.coordinates.unshift(newPoint);
-	setGridSquare(oldPoint.x, oldPoint.y, ' ');
-	setGridSquare(newPoint.x, newPoint.y, snake.symbol);
+	var movements = s.move();
+	setGridSquare(movements.oldPoint.x, movements.oldPoint.y, ' ');
+	setGridSquare(movements.newPoint.x, movements.newPoint.y, s.symbol);
 }
 
 
