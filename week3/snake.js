@@ -1,11 +1,6 @@
-var grid = [];
-var gridSize = 40;
+
 var s = snake();
-// var snake = { 
-// 	direction: 'r',
-// 	coordinates: [ {x: 1, y: 20}, {x: 1, y:21}, {x:1, y:22} ],
-// 	symbol: 'o'
-// }
+var g = game();
 
 function snake() {
 	var direction = 'r';
@@ -56,6 +51,38 @@ function snake() {
 }
 
 function game() {
+	var grid = [];
+	var gridSize = 40;
+	
+	function setupGrid() {
+		for (var i = 0; i < gridSize; i++) {
+			grid[i] = [];
+			for (var j = 0; j < gridSize; j++) {
+				grid[i][j] = ' ';
+			}
+		}
+	}
+
+	function render() { 
+		for (var i = 0; i < grid.length; i++) {
+			var row = $('<div>').addClass('row');
+			$('#container').append(row);
+			for (var j = 0; j < grid[i].length; j++) {
+				var cell = $('<div>').addClass('cell').text(grid[j][i]);
+				row.append(cell);
+			}
+		}
+	}
+
+	function setup(initialSnake, symbol) {
+		setupGrid();
+		
+		for (var i = 0; i < initialSnake.length; i++) {
+			updateGridSquare(initialSnake[i], symbol);
+		}
+
+		render();
+	}
 
 	function isArrowKey(e) {
 		return e.keyCode >= 37 && e.keyCode <= 40
@@ -69,8 +96,17 @@ function game() {
 		});
 	}	
 
+	function updateGridSquare(point, value) {
+		grid[point.x][point.y] = value;
+		var row = $('.row').eq(point.y);
+		var cell = row.find('.cell').eq(point.x);
+		cell.text(value);
+	}
+
 	return {
-		subscribeToArrowKeys : subscribe
+		subscribeToArrowKeys : subscribe,
+		updateGridSquare: updateGridSquare,
+		setup : setup
 	}
 }
 
@@ -79,53 +115,14 @@ function handleArrowKey(newDirection) {
 	move();
 }
 
-function setupGrid() {
-	for (var i = 0; i < gridSize; i++) {
-		grid[i] = [];
-		for (var j = 0; j < gridSize; j++) {
-			grid[i][j] = ' ';
-		}
-	}
-}
-
-function placeSnakeOnGrid() {
-	for (var i = 0; i < s.coordinates.length; i++) {
-		var point = s.coordinates[i];
-		setGridSquare(point.x, point.y, s.symbol);
-	}
-}
-
-function render() { 
-	for (var i = 0; i < grid.length; i++) {
-		var row = $('<div>').addClass('row');
-		$('#container').append(row);
-		for (var j = 0; j < grid[i].length; j++) {
-			var cell = $('<div>').addClass('cell').text(grid[j][i]);
-			row.append(cell);
-		}
-	}
-}
-
-function setGridSquare(x, y, value) {
-	grid[x][y] = value;
-	var row = $('.row').eq(y);
-	var cell = row.find('.cell').eq(x);
-	cell.text(value);
-}
- 
-
 function move(){
-	var movements = s.move();
-	setGridSquare(movements.oldPoint.x, movements.oldPoint.y, ' ');
-	setGridSquare(movements.newPoint.x, movements.newPoint.y, s.symbol);
+	var moves = s.move();
+	g.updateGridSquare(moves.oldPoint, ' ');
+	g.updateGridSquare(moves.newPoint, s.symbol);
 }
-
 
 $(document).ready(function() {
-	var g = game();
-	setupGrid();
-	placeSnakeOnGrid();
+	g.setup(s.coordinates, s.symbol);
 	g.subscribeToArrowKeys(handleArrowKey);
-	render();
 	setInterval(move, 1000);
 })
