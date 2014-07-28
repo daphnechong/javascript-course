@@ -26,7 +26,7 @@ function game() {
 		setupGrid();
 		
 		for (var i = 0; i < initialSnake.length; i++) {
-			updateGridSquare(initialSnake[i], symbol);
+			setCell(initialSnake[i], symbol);
 		}
 
 		render();
@@ -44,7 +44,7 @@ function game() {
 		});
 	}	
 
-	function updateGridSquare(point, value) {
+	function setCell(point, value) {
 		grid[point.x][point.y] = value;
 		var row = $('.row').eq(point.y);
 		var cell = row.find('.cell').eq(point.x);
@@ -53,7 +53,8 @@ function game() {
 
 	return {
 		subscribeToArrowKeys : subscribe,
-		updateGridSquare: updateGridSquare,
-		setup : setup
+		setCell: setCell,
+		setup : setup,
+		gridSize: gridSize
 	}
 }

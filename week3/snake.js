@@ -3,34 +3,37 @@ var s = snake();
 var g = game();
 
 function snake() {
-	var direction = 'r';
-	var coordinates = [ {x: 1, y: 20}, {x: 1, y:21}, {x:1, y:22} ];
+	var direction = 'right';
+	var coordinates = [ {x: 20, y: 20} ];
 
-	function move() {
+	function move(boundary) {
 		var oldPoint = coordinates.pop();
-		var point = coordinates[0];
-
+		var point = coordinates.length ? coordinates[0] : oldPoint;
 		var newPoint = { 
 			x: point.x, 
 			y: point.y 
 		};
 
 		switch (direction) {
-			case 'd': 
+			case 'down': 
 				newPoint.y++;
 				break;
-			case 'u': 
+			case 'up': 
 				newPoint.y--;
 				break;
-			case 'l':
+			case 'left':
 				newPoint.x--;
 				break;
-			case 'r': 
+			case 'right': 
 				newPoint.x++;
 				break;
 		}
 
+		newPoint.y = (newPoint.y + boundary) % boundary;
+		newPoint.x = (newPoint.x + boundary) % boundary;
 		coordinates.unshift(newPoint);
+
+		console.log(oldPoint, newPoint);
 
 		return {
 			oldPoint: oldPoint,
@@ -39,7 +42,7 @@ function snake() {
 	}
 
 	function changeDirection(newDirection) {
-		direction = newDirection[0].toLowerCase();
+		direction = newDirection.toLowerCase();
 	}
 
 	return {
@@ -49,20 +52,3 @@ function snake() {
 		changeDirection: changeDirection
 	}
 }
-
-function handleArrowKey(newDirection) {
-	s.changeDirection(newDirection);
-	move();
-}
-
-function move(){
-	var moves = s.move();
-	g.updateGridSquare(moves.oldPoint, ' ');
-	g.updateGridSquare(moves.newPoint, s.symbol);
-}
-
-$(document).ready(function() {
-	g.setup(s.coordinates, s.symbol);
-	g.subscribeToArrowKeys(handleArrowKey);
-	setInterval(move, 1000);
-})
