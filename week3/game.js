@@ -1,7 +1,9 @@
 function game() {
 	var grid = [];
+	var gridSize;
+	var snakeSymbol;
 
-	function setupGrid(gridSize) {
+	function setupGrid() {
 		for (var i = 0; i < gridSize; i++) {
 			grid[i] = [];
 			for (var j = 0; j < gridSize; j++) {
@@ -21,17 +23,24 @@ function game() {
 		}
 	}
 
-	function placeSnakeOnGrid(snakeCoords, snakeSymbol) {
+	function placeSnakeOnGrid(snakeCoords) {
 		for (var i = 0; i < snakeCoords.length; i++) {
 			setCell(snakeCoords[i], snakeSymbol);
 		}
 	}
 
 	function setup(params) {
-		setupGrid(params.gridSize);
+		gridSize = params.gridSize;
+		snakeSymbol = params.symbol;
+
+		setupGrid();
 		render();
-		placeSnakeOnGrid(params.snakeCoords, params.symbol);
+		placeSnakeOnGrid(params.snakeCoords);
 		subscribeArrowKeys(params.arrowKeyHandler);
+	}
+
+	function end() {
+		$('.cell').addClass('endgame');
 	}
 
 	function isArrowKey(e) {
@@ -53,8 +62,34 @@ function game() {
 		cell.text(value);
 	}
 
+	function isLegalMove(point) {
+		return grid[point.x][point.y] != snakeSymbol;
+	}
+
+	function isFoodCell(point) {
+		return grid[point.x][point.y] == 'x'
+	}
+
+	function placeNewFood() {
+		var suitableCoordinate = false, randomX, randomY;
+		
+		while (!suitableCoordinate) {
+			randomX = Math.round(Math.random() * (gridSize-1));
+			randomY = Math.round(Math.random() * (gridSize-1));
+
+			if (grid[randomX][randomY] == ' ') {
+				setCell({ x: randomX, y: randomY }, 'x');
+				suitableCoordinate = true;
+			}
+		}
+	}
+
 	return {
+		setup : setup,
+		end: end,
 		setCell: setCell,
-		setup : setup
+		isFoodCell: isFoodCell,
+		isLegalMove: isLegalMove,
+		placeNewFood: placeNewFood
 	}
 }

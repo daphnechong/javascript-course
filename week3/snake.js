@@ -1,17 +1,17 @@
 
 
-function snake(initialDirection, initialCoordinates) {
+function snake(initialDirection, initialCoordinates, initialBoundary) {
 	var direction = initialDirection;
-	var coordinates = initialCoordinates;
+	var coords = initialCoordinates;
+	var boundary = initialBoundary;
 
-	function move(boundary) {
-		var oldPoint = coordinates.pop();
-		var point = coordinates.length ? coordinates[0] : oldPoint;
-		var newPoint = { 
-			x: point.x, 
-			y: point.y 
-		};
-
+	function getNextCoordinate() {
+		var head = coords[0];
+		var newPoint = {
+			x: head.x,
+			y: head.y
+		}
+		
 		switch (direction) {
 			case 'down': 
 				newPoint.y++;
@@ -29,7 +29,15 @@ function snake(initialDirection, initialCoordinates) {
 
 		newPoint.y = (newPoint.y + boundary) % boundary;
 		newPoint.x = (newPoint.x + boundary) % boundary;
-		coordinates.unshift(newPoint);
+
+		return newPoint;
+	}
+
+	function move(isGrowing) {
+		var newPoint = getNextCoordinate();
+		var oldPoint = coords[coords.length - 1]; 
+		if (!isGrowing) coords.pop();
+		coords.unshift(newPoint);
 
 		return {
 			oldPoint: oldPoint,
@@ -37,14 +45,24 @@ function snake(initialDirection, initialCoordinates) {
 		}
 	}
 
-	function changeDirection(newDirection) {
-		direction = newDirection.toLowerCase();
+	function changeDirection(newDirection) {		
+			direction = newDirection;
+	}
+
+	function isDirectionAllowed(newDirection) {
+		return !(
+			newDirection == 'down' && direction == 'up' ||
+			newDirection == 'up' && direction == 'down' ||
+			newDirection == 'left' && direction == 'right' ||
+			newDirection == 'right' && direction == 'left');
 	}
 
 	return {
-		coordinates: coordinates,
+		coordinates: coords,
 		symbol: 'o',
 		move: move,
-		changeDirection: changeDirection
+		getNextCoordinate: getNextCoordinate,
+		changeDirection: changeDirection,
+		isDirectionAllowed: isDirectionAllowed
 	}
 }
