@@ -1,8 +1,7 @@
 function game() {
 	var grid = [];
-	var gridSize = 40;
-	
-	function setupGrid() {
+
+	function setupGrid(gridSize) {
 		for (var i = 0; i < gridSize; i++) {
 			grid[i] = [];
 			for (var j = 0; j < gridSize; j++) {
@@ -22,21 +21,24 @@ function game() {
 		}
 	}
 
-	function setup(initialSnake, symbol) {
-		setupGrid();
-		
-		for (var i = 0; i < initialSnake.length; i++) {
-			setCell(initialSnake[i], symbol);
+	function placeSnakeOnGrid(snakeCoords, snakeSymbol) {
+		for (var i = 0; i < snakeCoords.length; i++) {
+			setCell(snakeCoords[i], snakeSymbol);
 		}
+	}
 
+	function setup(params) {
+		setupGrid(params.gridSize);
 		render();
+		placeSnakeOnGrid(params.snakeCoords, params.symbol);
+		subscribeArrowKeys(params.arrowKeyHandler);
 	}
 
 	function isArrowKey(e) {
 		return e.keyCode >= 37 && e.keyCode <= 40
 	}
 
-	function subscribe(handler) {
+	function subscribeArrowKeys(handler) {
 		$('body').keydown(function(e) {
 			if (isArrowKey(e)) {
 				handler(e.originalEvent.keyIdentifier);	  	
@@ -52,9 +54,7 @@ function game() {
 	}
 
 	return {
-		subscribeToArrowKeys : subscribe,
 		setCell: setCell,
-		setup : setup,
-		gridSize: gridSize
+		setup : setup
 	}
 }
