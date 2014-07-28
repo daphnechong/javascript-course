@@ -1,3 +1,7 @@
+
+var s = snake('right', [ { x: 20, y: 20 } ]);
+var g = game();
+
 function handleArrowKey(newDirection) {
 	s.changeDirection(newDirection);
 	move();

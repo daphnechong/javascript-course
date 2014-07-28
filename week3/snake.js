@@ -1,10 +1,8 @@
 
-var s = snake();
-var g = game();
 
-function snake() {
-	var direction = 'right';
-	var coordinates = [ {x: 20, y: 20} ];
+function snake(initialDirection, initialCoordinates) {
+	var direction = initialDirection;
+	var coordinates = initialCoordinates;
 
 	function move(boundary) {
 		var oldPoint = coordinates.pop();
@@ -32,8 +30,6 @@ function snake() {
 		newPoint.y = (newPoint.y + boundary) % boundary;
 		newPoint.x = (newPoint.x + boundary) % boundary;
 		coordinates.unshift(newPoint);
-
-		console.log(oldPoint, newPoint);
 
 		return {
 			oldPoint: oldPoint,
