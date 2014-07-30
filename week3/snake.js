@@ -1,68 +1,60 @@
 
 
 function snake(initialDirection, initialCoordinates, initialBoundary) {
-	var direction = initialDirection;
-	var coords = initialCoordinates;
-	var boundary = initialBoundary;
+	this.direction = initialDirection;
+	this.coordinates = initialCoordinates;
+	this.boundary = initialBoundary;
+	this.symbol = 'o';
+}
 
-	function getNextCoordinate() {
-		var head = coords[0];
-		var newPoint = {
-			x: head.x,
-			y: head.y
-		}
-		
-		switch (direction) {
-			case 'down': 
-				newPoint.y++;
-				break;
-			case 'up': 
-				newPoint.y--;
-				break;
-			case 'left':
-				newPoint.x--;
-				break;
-			case 'right': 
-				newPoint.x++;
-				break;
-		}
-
-		newPoint.y = (newPoint.y + boundary) % boundary;
-		newPoint.x = (newPoint.x + boundary) % boundary;
-
-		return newPoint;
+snake.prototype.getNextCoordinate = function() {
+	var head = this.coordinates[0];
+	var newPoint = {
+		x: head.x,
+		y: head.y
 	}
 
-	function move(isGrowing) {
-		var newPoint = getNextCoordinate();
-		var oldPoint = coords[coords.length - 1]; 
-		if (!isGrowing) coords.pop();
-		coords.unshift(newPoint);
-
-		return {
-			oldPoint: oldPoint,
-			newPoint: newPoint
-		}
+	switch (this.direction) {
+		case 'down': 
+			newPoint.y++;
+			break;
+		case 'up': 
+			newPoint.y--;
+			break;
+		case 'left':
+			newPoint.x--;
+			break;
+		case 'right': 
+			newPoint.x++;
+			break;
 	}
 
-	function changeDirection(newDirection) {		
-			direction = newDirection;
-	}
+	newPoint.y = (newPoint.y + this.boundary) % this.boundary;
+	newPoint.x = (newPoint.x + this.boundary) % this.boundary;
 
-	function isDirectionAllowed(newDirection) {
-		return !(
-			newDirection == 'down' && direction == 'up' ||
-			newDirection == 'up' && direction == 'down' ||
-			newDirection == 'left' && direction == 'right' ||
-			newDirection == 'right' && direction == 'left');
-	}
+	return newPoint;
+}
+
+snake.prototype.move = function(isGrowing) {
+	var newPoint = this.getNextCoordinate();
+	var oldPoint = this.coordinates[this.coordinates.length - 1]; 
+	if (!isGrowing) this.coordinates.pop();
+	this.coordinates.unshift(newPoint);
 
 	return {
-		coordinates: coords,
-		symbol: 'o',
-		move: move,
-		getNextCoordinate: getNextCoordinate,
-		changeDirection: changeDirection,
-		isDirectionAllowed: isDirectionAllowed
+		oldPoint: oldPoint,
+		newPoint: newPoint
 	}
+}
+
+snake.prototype.changeDirection = function(newDirection) {		
+	this.direction = newDirection;
+}
+
+snake.prototype.isDirectionAllowed = function(newDirection) {
+	return !(
+		newDirection == 'down' && this.direction == 'up' ||
+		newDirection == 'up' && this.direction == 'down' ||
+		newDirection == 'left' && this.direction == 'right' ||
+		newDirection == 'right' && this.direction == 'left');
 }
