@@ -1,46 +1,32 @@
 
 var gridSize = 20;
 var initialCell = Math.round(gridSize/2);
-var s = new Snake('right', [ { x: initialCell, y: initialCell } ], gridSize);
+var snake = new Snake('right', [ { x: initialCell, y: initialCell } ], gridSize);
 var board = new Board(gridSize);
-var g = new Game(s, board);
+var game = new Game(snake, board);
 var interval;
 
-function handleArrowKey(newDirection) {
-	newDirection = newDirection.toLowerCase();
-	if (s.isDirectionAllowed(newDirection)) {
-		s.changeDirection(newDirection);
-		move();
-	}
-}
-
 function move() {
-	var nextCoordinate = s.getNextCoordinate();
+	var nextCoordinate = snake.getNextCoordinate();
 	
-	if (!g.isLegalMove(nextCoordinate)) { 
-		g.end();
+	if (!game.isLegalMove(nextCoordinate)) { 
+		game.end();
 		clearInterval(interval);
 		return;
 	}
 
-	var isFoodCell = g.isFoodCell(nextCoordinate);
+	var isFoodCell = game.isFoodCell(nextCoordinate);
 	
 	if (isFoodCell) { 
-		g.placeNewFood();
+		game.placeNewFood();
 	}
 
-	var moves = s.move(isFoodCell);
-	board.setCell(moves.oldPoint, isFoodCell ? s.symbol : ' ');
-	board.setCell(moves.newPoint, s.symbol);	
+	var moves = snake.move(isFoodCell);
+	board.setCell(moves.oldPoint, isFoodCell ? snake.symbol : ' ');
+	board.setCell(moves.newPoint, snake.symbol);	
 }
 
 $(document).ready(function() {
-	g.setup({ 
-		gridSize: gridSize, 
-		snakeCoords: s.coordinates, 
-		symbol: s.symbol,
-		arrowKeyHandler: handleArrowKey
-	});
-	g.placeNewFood();
+	game.setup();
 	interval = setInterval(move, 100);
 })

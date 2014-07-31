@@ -9,11 +9,12 @@ Game.prototype.placeSnakeOnGrid = function() {
 	}
 }
 
-Game.prototype.setup = function(params) {
+Game.prototype.setup = function() {
 	this.board.setupGrid();
 	this.board.render();
 	this.placeSnakeOnGrid();
-	this.subscribeArrowKeys(params.arrowKeyHandler);
+	this.subscribeArrowKeys();
+	this.placeNewFood();
 }
 
 Game.prototype.end = function() {
@@ -27,9 +28,12 @@ Game.prototype.isArrowKey = function(e) {
 Game.prototype.subscribeArrowKeys = function(handler) {
 	var self = this;
 	$('body').keydown(function(e) {
-		if (self.isArrowKey(e)) {
-			handler(e.originalEvent.keyIdentifier);	  	
-	  	}
+		if (!self.isArrowKey(e)) return;
+
+		var newDirection = e.originalEvent.keyIdentifier.toLowerCase();
+		if (snake.isDirectionAllowed(newDirection)) {
+			snake.changeDirection(newDirection);
+		}
 	});
 }	
 
