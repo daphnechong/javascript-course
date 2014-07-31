@@ -1,7 +1,10 @@
 
-var gridSize = 40;
-var s = snake('right', [ { x: 20, y: 20 } ], gridSize);
-var g = game();
+var gridSize = 20;
+var initialCell = Math.round(gridSize/2);
+var s = new Snake('right', [ { x: initialCell, y: initialCell } ], gridSize);
+var board = new Board(gridSize);
+var g = new Game(s, board);
+var interval;
 
 function handleArrowKey(newDirection) {
 	newDirection = newDirection.toLowerCase();
@@ -16,14 +19,19 @@ function move() {
 	
 	if (!g.isLegalMove(nextCoordinate)) { 
 		g.end();
+		clearInterval(interval);
 		return;
 	}
 
 	var isFoodCell = g.isFoodCell(nextCoordinate);
-	if (isFoodCell) g.placeNewFood();
+	
+	if (isFoodCell) { 
+		g.placeNewFood();
+	}
+
 	var moves = s.move(isFoodCell);
-	g.setCell(moves.oldPoint, isFoodCell ? s.symbol : ' ');
-	g.setCell(moves.newPoint, s.symbol);	
+	board.setCell(moves.oldPoint, isFoodCell ? s.symbol : ' ');
+	board.setCell(moves.newPoint, s.symbol);	
 }
 
 $(document).ready(function() {
@@ -34,11 +42,5 @@ $(document).ready(function() {
 		arrowKeyHandler: handleArrowKey
 	});
 	g.placeNewFood();
-	setInterval(move, 300);
+	interval = setInterval(move, 100);
 })
-
-
-// var q = snake('right', [{x:1, y:1}]);
-// q.coordinates = [{x:3, y:3}];
-// q.move(5);
-// q.coordinates are x:2, y:1 it hasn't kept the new assignment

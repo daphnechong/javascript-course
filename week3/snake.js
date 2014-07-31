@@ -1,13 +1,13 @@
 
 
-function snake(initialDirection, initialCoordinates, initialBoundary) {
+function Snake(initialDirection, initialCoordinates, initialBoundary) {
 	this.direction = initialDirection;
 	this.coordinates = initialCoordinates;
 	this.boundary = initialBoundary;
 	this.symbol = 'o';
 }
 
-snake.prototype.getNextCoordinate = function() {
+Snake.prototype.getNextCoordinate = function() {
 	var head = this.coordinates[0];
 	var newPoint = {
 		x: head.x,
@@ -35,7 +35,7 @@ snake.prototype.getNextCoordinate = function() {
 	return newPoint;
 }
 
-snake.prototype.move = function(isGrowing) {
+Snake.prototype.move = function(isGrowing) {
 	var newPoint = this.getNextCoordinate();
 	var oldPoint = this.coordinates[this.coordinates.length - 1]; 
 	if (!isGrowing) this.coordinates.pop();
@@ -47,11 +47,11 @@ snake.prototype.move = function(isGrowing) {
 	}
 }
 
-snake.prototype.changeDirection = function(newDirection) {		
+Snake.prototype.changeDirection = function(newDirection) {		
 	this.direction = newDirection;
 }
 
-snake.prototype.isDirectionAllowed = function(newDirection) {
+Snake.prototype.isDirectionAllowed = function(newDirection) {
 	return !(
 		newDirection == 'down' && this.direction == 'up' ||
 		newDirection == 'up' && this.direction == 'down' ||
