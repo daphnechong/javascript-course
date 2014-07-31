@@ -40,11 +40,7 @@ Snake.prototype.move = function(isGrowing) {
 	var oldPoint = this.coordinates[this.coordinates.length - 1]; 
 	if (!isGrowing) this.coordinates.pop();
 	this.coordinates.unshift(newPoint);
-
-	return {
-		oldPoint: oldPoint,
-		newPoint: newPoint
-	}
+	return oldPoint;
 }
 
 Snake.prototype.changeDirection = function(newDirection) {		
