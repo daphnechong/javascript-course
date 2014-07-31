@@ -20,14 +20,18 @@ Game.prototype.end = function() {
 	$('.cell').addClass('endgame');
 }
 
+Game.prototype.isArrowKey = function(e) {
+	return e.keyCode >= 37 && e.keyCode <= 40
+}
+
 Game.prototype.subscribeArrowKeys = function(handler) {
+	var self = this;
 	$('body').keydown(function(e) {
-		if (e.keyCode >= 37 && e.keyCode <= 40) {
+		if (self.isArrowKey(e)) {
 			handler(e.originalEvent.keyIdentifier);	  	
 	  	}
 	});
 }	
-
 
 Game.prototype.isLegalMove = function(point) {
 	return this.board.getCell(point) !== this.snake.symbol;
