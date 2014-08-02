@@ -14,13 +14,6 @@ Game.prototype.setup = function() {
 		}
 	}
 
-	function arrowKeyHandler(newDirection) {
-		var newDirection = newDirection.toLowerCase();
-		if (snake.isDirectionAllowed(newDirection)) {
-			snake.changeDirection(newDirection);
-		}
-	}
-
 	function isArrowKey(e) {
 		return e.keyCode >= 37 && e.keyCode <= 40
 	}
@@ -28,7 +21,11 @@ Game.prototype.setup = function() {
 	function subscribeArrowKeys() {
 		$('body').keydown(function(e) {
 			if (!isArrowKey(e)) return;
-			arrowKeyHandler(e.originalEvent.keyIdentifier);
+
+			var newDirection = e.originalEvent.keyIdentifier.toLowerCase();
+			if (snake.isDirectionAllowed(newDirection)) {
+				snake.changeDirection(newDirection);
+			}
 		});
 	}
 
@@ -45,6 +42,7 @@ Game.prototype.setup = function() {
 
 Game.prototype.move = function() {
 	var self = this;
+
 	function isFoodCell(point) {
 		return this.board.getCell(point) === 'x';	
 	}
@@ -57,15 +55,17 @@ Game.prototype.move = function() {
 	}
 
 	var nextPoint = this.snake.getNextCoordinate();
+	
 	endGameIfSnakeRunsIntoItself(nextPoint);
+
 	var isFoodCell = isFoodCell(nextPoint);
+	var oldPoint = this.snake.move(isFoodCell);
+	this.board.setCell(oldPoint, isFoodCell ? snake.symbol : ' ');
+	this.board.setCell(nextPoint, snake.symbol);	
 	if (isFoodCell) { 
 		this.placeNewFood();
 	}
 
-	var oldPoint = this.snake.move(isFoodCell);
-	this.board.setCell(oldPoint, isFoodCell ? snake.symbol : ' ');
-	this.board.setCell(nextPoint, snake.symbol);	
 }
 
 
