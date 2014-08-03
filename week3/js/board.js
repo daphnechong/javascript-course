@@ -10,9 +10,8 @@ Board.prototype.setupGrid = function() {
 			this.grid[i][j] = ' ';
 		}
 	}
-}
 
-Board.prototype.render = function() { 
+	//render
 	for (var i = 0; i < this.grid.length; i++) {
 		var row = $('<div>').addClass('row');
 		$('#container').append(row);

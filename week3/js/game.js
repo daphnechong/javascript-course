@@ -29,7 +29,6 @@ Game.prototype.setup = function() {
 	}
 
 	this.board.setupGrid();
-	this.board.render();
 	this.placeNewFood();
 	
 	subscribeArrowKeys();

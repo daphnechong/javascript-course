@@ -2,58 +2,83 @@ describe('Game', function() {
 	var snake, board, game;
 
 	beforeEach(function() {
-		snake = jasmine.createSpyObj('snake', ['changeDirection', 'coordinates']);
-		board = jasmine.createSpyObj('board', ['setupGrid', 'render', 'getRandomEmptyCell', 'setCell']);
+		snake = jasmine.createSpyObj('snake', ['changeDirection', 'coordinates', 'symbol']);
+		board = jasmine.createSpyObj('board', ['setupGrid', 'getRandomEmptyCell', 'setCell']);
 	  game = new Game(snake, board);
 	});
 
 	describe('setup', function() {
 
-		function triggerKeyDownWithCodeAndIdentifier(keyCode, identifier) {
-			var e = $.Event('keydown');
-			e.keyCode = keyCode;
-			e.originalEvent = { keyIdentifier: identifier };
-			$('body').trigger(e);
-		}
+		describe('arrow keys', function() {
+			function triggerKeyDownWithCodeAndIdentifier(keyCode, identifier) {
+				var e = $.Event('keydown');
+				e.keyCode = keyCode;
+				e.originalEvent = { keyIdentifier: identifier };
+				$('body').trigger(e);
+			}
 
-		it('should listen to left arrow key presses', function() {
-		  game.setup();	
-			
-			triggerKeyDownWithCodeAndIdentifier(37, 'left');
+			it('should listen to left arrow key presses', function() {
+			  game.setup();	
+				
+				triggerKeyDownWithCodeAndIdentifier(37, 'left');
 
-			expect(snake.changeDirection).toHaveBeenCalledWith('left');
+				expect(snake.changeDirection).toHaveBeenCalledWith('left');
+			});
+
+			it('should listen to right arrow key presses', function() {
+				game.setup();	
+
+				triggerKeyDownWithCodeAndIdentifier(39, 'right');
+
+				expect(snake.changeDirection).toHaveBeenCalledWith('right');
+			});
+
+			it('should listen to up arrow key presses', function() {
+				game.setup();
+
+				triggerKeyDownWithCodeAndIdentifier(38, 'up');
+
+				expect(snake.changeDirection).toHaveBeenCalledWith('up');
+			});
+
+			it('should listen to down arrow key presses', function() {
+				game.setup();
+
+				triggerKeyDownWithCodeAndIdentifier(40, 'down');
+
+				expect(snake.changeDirection).toHaveBeenCalledWith('down');
+			});
+
+			it('should ignore other keys being pressed', function() {
+				game.setup();
+
+				triggerKeyDownWithCodeAndIdentifier(86, 'a');
+
+				expect(snake.changeDirection).not.toHaveBeenCalled();
+			});
 		});
 
-		it('should listen to right arrow key presses', function() {
-			game.setup();	
-
-			triggerKeyDownWithCodeAndIdentifier(39, 'right');
-
-			expect(snake.changeDirection).toHaveBeenCalledWith('right');
-		});
-
-		it('should listen to up arrow key presses', function() {
+		it('should set up board', function() {
 			game.setup();
 
-			triggerKeyDownWithCodeAndIdentifier(38, 'up');
-
-			expect(snake.changeDirection).toHaveBeenCalledWith('up');
+			expect(board.setupGrid).toHaveBeenCalled();
 		});
 
-		it('should listen to down arrow key presses', function() {
+		it('should put the first piece of food on the grid', function() {
+			board.getRandomEmptyCell.and.returnValue({x:1, y:1});
 			game.setup();
 
-			triggerKeyDownWithCodeAndIdentifier(40, 'down');
-
-			expect(snake.changeDirection).toHaveBeenCalledWith('down');
+			expect(board.setCell).toHaveBeenCalledWith({x:1, y:1}, 'x');
 		});
 
-		it('should ignore other keys being pressed', function() {
+		it('should put the snake on the grid', function() {
+			snake.coordinates = [{x:2, y:2}, {x:2, y:1}];
+			snake.symbol = 's';
 			game.setup();
 
-			triggerKeyDownWithCodeAndIdentifier(86, 'a');
-
-			expect(snake.changeDirection).not.toHaveBeenCalled();
+			expect(board.setCell).toHaveBeenCalledWith({x:2, y:2}, 's');
+			expect(board.setCell).toHaveBeenCalledWith({x:2, y:1}, 's');
 		});
 	});
+
 });
