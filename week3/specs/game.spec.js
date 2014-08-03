@@ -1,90 +1,59 @@
 describe('Game', function() {
-	it('should listen to left arrow key presses', function() {
-		var mockHandler = jasmine.createSpy('handler');
-	    var g = game();
-	    g.setup({ 
-	    	gridSize: 3,
-	    	snakeCoords: [],
-	    	symbol: 'o',
-	    	arrowKeyHandler: mockHandler
-	    });	
+	var snake, board, game;
 
-		var e = $.Event('keydown');
-		e.keyCode = 37;
-		e.originalEvent = { keyIdentifier: "identifier" };
-		$('body').trigger(e);
-
-		expect(mockHandler).toHaveBeenCalledWith("identifier");
+	beforeEach(function() {
+		snake = jasmine.createSpyObj('snake', ['changeDirection', 'coordinates']);
+		board = jasmine.createSpyObj('board', ['setupGrid', 'render', 'getRandomEmptyCell', 'setCell']);
+	  game = new Game(snake, board);
 	});
 
-	it('should listen to right arrow key presses', function() {
-		var mockHandler = jasmine.createSpy('handler');
-	    var g = game();
-	    g.setup({ 
-	    	gridSize: 3,
-	    	snakeCoords: [],
-	    	symbol: 'o',
-	    	arrowKeyHandler: mockHandler
-	    });	
+	describe('setup', function() {
 
-		var e = $.Event('keydown');
-		e.keyCode = 39;
-		e.originalEvent = { keyIdentifier: "identifier" };
-		$('body').trigger(e);
+		function triggerKeyDownWithCodeAndIdentifier(keyCode, identifier) {
+			var e = $.Event('keydown');
+			e.keyCode = keyCode;
+			e.originalEvent = { keyIdentifier: identifier };
+			$('body').trigger(e);
+		}
 
-		expect(mockHandler).toHaveBeenCalledWith("identifier");
-	});
+		it('should listen to left arrow key presses', function() {
+		  game.setup();	
+			
+			triggerKeyDownWithCodeAndIdentifier(37, 'left');
 
-	it('should listen to up arrow key presses', function() {
-		var mockHandler = jasmine.createSpy('handler');
-	    var g = game();	
-		g.setup({ 
-	    	gridSize: 3,
-	    	snakeCoords: [],
-	    	symbol: 'o',
-	    	arrowKeyHandler: mockHandler
-	    });	
+			expect(snake.changeDirection).toHaveBeenCalledWith('left');
+		});
 
-		var e = $.Event('keydown');
-		e.keyCode = 38;
-		e.originalEvent = { keyIdentifier: "identifier" };
-		$('body').trigger(e);
+		it('should listen to right arrow key presses', function() {
+			game.setup();	
 
-		expect(mockHandler).toHaveBeenCalledWith("identifier");
-	});
+			triggerKeyDownWithCodeAndIdentifier(39, 'right');
 
-	it('should listen to down arrow key presses', function() {
-		var mockHandler = jasmine.createSpy('handler');
-	    var g = game();	
-		g.setup({ 
-	    	gridSize: 3,
-	    	snakeCoords: [],
-	    	symbol: 'o',
-	    	arrowKeyHandler: mockHandler
-	    });	
+			expect(snake.changeDirection).toHaveBeenCalledWith('right');
+		});
 
-		var e = $.Event('keydown');
-		e.keyCode = 40;
-		e.originalEvent = { keyIdentifier: "identifier" };
-		$('body').trigger(e);
+		it('should listen to up arrow key presses', function() {
+			game.setup();
 
-		expect(mockHandler).toHaveBeenCalledWith("identifier");
-	});
+			triggerKeyDownWithCodeAndIdentifier(38, 'up');
 
-	it('should ignore other keys being pressed', function() {
-		var mockHandler = jasmine.createSpy('handler');
-	    var g = game();	
-		g.setup({ 
-	    	gridSize: 3,
-	    	snakeCoords: [],
-	    	symbol: 'o',
-	    	arrowKeyHandler: mockHandler
-	    });	
+			expect(snake.changeDirection).toHaveBeenCalledWith('up');
+		});
 
-		var e = $.Event('keydown');
-		e.keyCode = 86;
-		$('body').trigger(e);
+		it('should listen to down arrow key presses', function() {
+			game.setup();
 
-		expect(mockHandler).not.toHaveBeenCalled();
+			triggerKeyDownWithCodeAndIdentifier(40, 'down');
+
+			expect(snake.changeDirection).toHaveBeenCalledWith('down');
+		});
+
+		it('should ignore other keys being pressed', function() {
+			game.setup();
+
+			triggerKeyDownWithCodeAndIdentifier(86, 'a');
+
+			expect(snake.changeDirection).not.toHaveBeenCalled();
+		});
 	});
 });

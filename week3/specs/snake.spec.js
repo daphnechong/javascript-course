@@ -9,6 +9,10 @@ describe('Snake', function() {
 	    expect(s.coordinates).toEqual([{ x: 1, y: 2 }]);
 	});
 
+	describe('getNextCoordinate', function() {
+
+	});
+
 	describe('move', function() {
 		it('should increment the x-coordinate if the snake is moving right', function() {
 			var gridSize = 40;

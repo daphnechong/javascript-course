@@ -43,14 +43,15 @@ Snake.prototype.move = function(isGrowing) {
 	return oldPoint;
 }
 
-Snake.prototype.changeDirection = function(newDirection) {		
-	this.direction = newDirection;
-}
+Snake.prototype.changeDirection = function(newDirection) {
 
-Snake.prototype.isDirectionAllowed = function(newDirection) {
-	return !(
+	var isDirectionAllowed = !(
 		newDirection == 'down' && this.direction == 'up' ||
 		newDirection == 'up' && this.direction == 'down' ||
 		newDirection == 'left' && this.direction == 'right' ||
 		newDirection == 'right' && this.direction == 'left');
+
+	if (isDirectionAllowed) {
+		this.direction = newDirection;
+	}
 }

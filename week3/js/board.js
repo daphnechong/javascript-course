@@ -12,7 +12,6 @@ Board.prototype.setupGrid = function() {
 	}
 }
 
-
 Board.prototype.render = function() { 
 	for (var i = 0; i < this.grid.length; i++) {
 		var row = $('<div>').addClass('row');
@@ -33,4 +32,18 @@ Board.prototype.setCell = function(point, value) {
 
 Board.prototype.getCell = function(point) {
 	return this.grid[point.x][point.y];
+}
+
+Board.prototype.getRandomEmptyCell = function() {
+	var randomX, randomY;
+	
+	while (true) {
+		randomX = Math.round(Math.random() * (this.gridSize-1));
+		randomY = Math.round(Math.random() * (this.gridSize-1));
+
+		if (this.grid[randomX][randomY] == ' ')
+		{
+			return { x: randomX, y: randomY };
+		}
+	}
 }
