@@ -46,7 +46,7 @@ Game.prototype.nextGameTick = function() {
 	}
 
 	function endGameIfSnakeRunsIntoItself(point) {
-		if (this.board.getCell(point) == this.snake.symbol) {
+		if (self.board.getCell(point) == self.snake.symbol) {
 			$('.cell').addClass('endgame');
 			clearInterval(self.interval); // this doesn't work when it is this.interval
 		}
