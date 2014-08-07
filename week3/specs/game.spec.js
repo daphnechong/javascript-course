@@ -81,32 +81,74 @@ describe('Game', function() {
 		});
 	});
 
-	describe('next game tick', function() {
+	describe('next game tick -- THIS FUNCTION DOES TOO MUCH :P -- ', function() {
+
+		beforeEach(function() {
+			snake = new Snake('up', [{x:1, y:1}], 3);
+			board = new Board(3);
+		  game = new Game(snake, board);
+		});
 
 		it('should move the snake and update the board', function() {
+			spyOn(snake, 'getNextCoordinate').and.callThrough();
+			spyOn(snake, 'move').and.callThrough();
 			game.setup();
 			game.nextGameTick();
 			expect(snake.getNextCoordinate).toHaveBeenCalled();
 			expect(snake.move).toHaveBeenCalled();
 		});
 
-		xit('should place new food if food is eaten', function() {
-			board.getRandomEmptyCell.and.returnValue({x:1, y:1});
-			snake.coordinates = [{x:0, y:1}];
-			snake.getNextCoordinate.and.returnValue({x:1, y:1});
-			snake.direction = 'up';
+		it('should place new food if food is eaten', function() {
+			spyOn(board, 'getRandomEmptyCell').and.returnValue({x:1, y:0});
+			spyOn(game, 'placeNewFood').and.callThrough();
 
-			spyOn(game, 'placeNewFood');
 			game.setup();
 			game.nextGameTick();
 			
-			expect(game.placeNewFood).toHaveBeenCalled();
+			expect(game.placeNewFood.calls.count()).toEqual(2);
 		});
 
-		it('should set the old cell to be empty')
-		it('should set the old cell to be snake if it ate food')
-		it('should set the new cell to be snake')
-		it('should end the game if the snake runs into itself')
+		it('should set the old cell to be empty', function() {
+			var tail = snake.coordinates[snake.coordinates.length-1];
+			spyOn(board, 'setCell').and.callThrough();
+			game.setup();
+			game.nextGameTick();
+
+			expect(board.setCell).toHaveBeenCalledWith(tail, ' ');
+		});
+
+		it('should set the old cell to be snake if it ate food', function() {
+			var nextFood = {x:1, y:0}
+			spyOn(board, 'setCell').and.callThrough();
+			spyOn(board, 'getRandomEmptyCell').and.returnValue(nextFood);
+
+			game.setup();
+			game.nextGameTick();
+
+			expect(board.setCell).toHaveBeenCalledWith(nextFood, 'o');
+		});
+
+		it('should set the new cell to be snake', function() {
+			spyOn(board, 'setCell').and.callThrough();
+			
+			game.setup();
+			game.nextGameTick();
+
+			expect(board.setCell).toHaveBeenCalledWith({x:1, y:0}, 'o');
+		});
+
+		xit('should end the game if the snake runs into itself', function() {			
+			snake = new Snake('up', [{x:1, y:1}, {x:1, y:0}], 3);
+			board = new Board(3);
+		  game = new Game(snake, board);
+			game.setup();
+
+			spyOn(jQuery, 'addClass').and.callThrough();
+
+			game.nextGameTick();
+
+			expect(jQuery.addClass).toHaveBeenCalledWith('endgame');
+		});
 	});
 
 	describe('place new food', function() {
