@@ -16,3 +16,20 @@
     line-height: 100px;
     text-align: center;
 }
+
+.instructions
+{
+    width: 500px;
+    margin: 0 auto;
+}
+
+.result {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 2.5em;
+}
+
+body {
+    font-family: helvetica, verdana, sans-serif;
+}

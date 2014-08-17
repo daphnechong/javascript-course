@@ -26,7 +26,7 @@ Board.prototype.getCell = function(point) {
 }
 
 function Game(board) {
-  this.firstPlayer = true;
+  this.isFirstPlayersTurn = true;
   this.board = board;
 
   var one = {x: 0, y: 0};
@@ -52,14 +52,17 @@ function Game(board) {
 }
 
 Game.prototype.playTurn = function(e) {
-  var symbol = this.firstPlayer ? 'X' : 'O';
+  var symbol = this.isFirstPlayersTurn ? 'X' : 'O';
   var coords = e.currentTarget.id.split('-');
+  var point = { x: coords[1], y: coords[0] };
+
+  if (this.board.getCell(point) != ' ') return;
  
-  this.firstPlayer = !this.firstPlayer;
-  this.board.setCell({ x: coords[1], y: coords[0] }, symbol);
+  this.isFirstPlayersTurn = !this.isFirstPlayersTurn;
+  this.board.setCell(point, symbol);
   
   if (this.isWinner()) {
-    console.log('you won!!!')
+    $('.result').text(symbol + ' has won the game!');
     $('.cell').unbind('click');
   }
 }
