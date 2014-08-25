@@ -3,14 +3,15 @@ function Board(size) {
   this.gridSize = size;
 }
 
+
 Board.prototype.isCellWithinGrid = function(x, y) {
   return x < this.gridSize 
-      && y < this.gridSize 
-      && x >= 0 
-      && y >= 0;
+    && x >=0
+    && y < this.gridSize 
+    && y >=0;
 }
 
-Board.prototype.updateNeighbouringCells = function(x, y) {
+Board.prototype.getNeighbours = function(x, y) {
   var self = this;
   var coords = [ 
     { x: x + 1, y: y },
@@ -23,10 +24,22 @@ Board.prototype.updateNeighbouringCells = function(x, y) {
     { x: x - 1, y: y - 1 }
   ];
 
-  coords.forEach(function(point) {
-    if (self.isCellWithinGrid(point.x, point.y)) {
-      self.grid[point.x][point.y].neighbouringBombCount++;
+  for (var i = 0; i < coords.length; i++) {
+    var point = coords[i];
+    if (!self.isCellWithinGrid(point.x, point.y)) {
+      coords.splice(i, 1);
+      i--; //hackfest.
     }
+  }
+
+  return coords;
+}
+
+Board.prototype.updateBombCountsAround = function(x, y) {
+  var self = this;
+
+  this.getNeighbours(x, y).forEach(function(point) {
+    self.grid[point.x][point.y].neighbouringBombCount++;
   });
 }
 
@@ -38,7 +51,7 @@ Board.prototype.setupBombs = function(bombCount) {
     var y = Math.floor(index % this.gridSize);
     if (!this.grid[x][y].isBomb) {
       this.grid[x][y].isBomb = true;
-      this.updateNeighbouringCells(x, y);
+      this.updateBombCountsAround(x, y);
       count++;
     }
   }
@@ -58,19 +71,23 @@ Board.prototype.renderGrid = function() {
     var row = $('<div>').addClass('row');
     $('#board').append(row);
     for (var j = 0; j < this.grid[i].length; j++) {
-      var value = this.grid[j][i].isBomb ? 'X' : this.grid[j][i].neighbouringBombCount;
-      var cell = $('<div>').addClass('cell').text(value);
-      row.append(cell);
+      var cell = this.grid[j][i];
+
+      var bombCount = cell.neighbouringBombCount ? cell.neighbouringBombCount : '0';
+      var value = cell.isBomb ? 'X' : bombCount;
+      
+      var elem = $('<div>').addClass('cell').text(value);
+      row.append(elem);
     }
   }
 }
 
-Board.prototype.setCell = function(point, value) {
-  this.grid[point.x][point.y] = value;
-  var row = $('.row').eq(point.y);
-  var cell = row.find('.cell').eq(point.x);
-  cell.text(value);
-}
+// Board.prototype.setCell = function(point, value) {
+//   this.grid[point.x][point.y] = value;
+//   var row = $('.row').eq(point.y);
+//   var cell = row.find('.cell').eq(point.x);
+//   cell.text(value);
+// }
 
 Board.prototype.getCell = function(point) {
   return this.grid[point.x][point.y];

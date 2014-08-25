@@ -3,32 +3,26 @@
 			font-family: sans-serif;
 		}
 
-		body[data-state="running"] form {
-			display: none;
+/*		#board div {
+			font-size: 1.2em;
+			line-height: 1.2em;
+			margin: 3px;
 		}
-		input[type=number] {
-			width: 3em;
-		}
-
-		#board div {
-			font-size: 1.4em;
-		}
-
-		.row {
+*/
+/*		.row {
 			padding: 0;
 			margin: 2;
 			line-height: 0;
 		}
-
+*/
 		.cell {
 			display:inline-block;
 			border: 1px solid #ccc;
-			height: 1.2em;
-			line-height: 0;
+			height: 1.4em;
+			line-height: 1.4em;
+			font-size: 1.4em;
+			width: 1.4em;
 			text-align: center;
-			width: 1.2em;
-			margin: 2;
-			padding: 0;
 		}
 		
 		.cell:hover {
