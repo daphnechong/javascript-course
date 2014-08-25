@@ -1,4 +1,5 @@
 var Game = function(board, bombCount) {
+	var self = this;
 	this.bombCount = bombCount;
 	this.board = board;
 
@@ -6,10 +7,15 @@ var Game = function(board, bombCount) {
 	this.board.setupGrid();
 	this.board.setupBombs(bombCount);
 	this.board.renderGrid();
-	// initialise the bomb locations in the board
+	
+	// need to extract the render into a different presentaiton layer.
 
-	// need an object to save the state of the 
-
+	$('.cell').click(function(e) {
+		var coords = e.target.id.split('-');
+		var x = coords[0];
+		var y = coords[1];
+		self.board.reveal(x, y);
+	});
 	// subscribe to click events on the grid cells
 	// on click, 
 	// 		if it's an empty cell, you want to expose all the others in the immediate region

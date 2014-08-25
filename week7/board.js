@@ -3,7 +3,6 @@ function Board(size) {
   this.gridSize = size;
 }
 
-
 Board.prototype.isCellWithinGrid = function(x, y) {
   return x < this.gridSize 
     && x >=0
@@ -39,7 +38,8 @@ Board.prototype.updateBombCountsAround = function(x, y) {
   var self = this;
 
   this.getNeighbours(x, y).forEach(function(point) {
-    self.grid[point.x][point.y].neighbouringBombCount++;
+    var cell = self.getCell(point.x, point.y);
+    cell.neighbouringBombCount++;
   });
 }
 
@@ -49,8 +49,9 @@ Board.prototype.setupBombs = function(bombCount) {
     var index = Math.random() * this.gridSize * this.gridSize;
     var x = Math.floor(index / this.gridSize);
     var y = Math.floor(index % this.gridSize);
-    if (!this.grid[x][y].isBomb) {
-      this.grid[x][y].isBomb = true;
+    var cell = this.getCell(x, y);
+    if (!cell.isBomb) {
+      cell.isBomb = true;
       this.updateBombCountsAround(x, y);
       count++;
     }
@@ -72,13 +73,38 @@ Board.prototype.renderGrid = function() {
     $('#board').append(row);
     for (var j = 0; j < this.grid[i].length; j++) {
       var cell = this.grid[j][i];
-
-      var bombCount = cell.neighbouringBombCount ? cell.neighbouringBombCount : '0';
-      var value = cell.isBomb ? 'X' : bombCount;
-      
-      var elem = $('<div>').addClass('cell').text(value);
+      var elem = $('<div>').addClass('cell').text(cell.symbol());
+      elem.attr('id', j + '-' + i);
       row.append(elem);
     }
+  }
+}
+
+Board.prototype.reveal = function(x, y) {
+  var self = this;
+  var cell = this.getCell(x, y);
+
+  if (cell.isBomb) {
+    console.log('BOOM');
+  }
+  else {
+    if (cell.isRevealed) return;
+    cell.isRevealed = true;
+
+    console.log('cell', x, y, cell.neighbouringBombCount)
+    if (!cell.neighbouringBombCount) {
+      var neighbours = this.getNeighbours(x, y);
+      neighbours.forEach(function(n) {
+        if (n.neighbouringBombCount) {
+          var id = n.x + '-' + n.y;
+          $('#' + id).text(n.neighbouringBombCount)
+        } 
+        else {
+          self.reveal(n.x, n.y);
+        }
+      });
+    }
+    
   }
 }
 
@@ -89,6 +115,6 @@ Board.prototype.renderGrid = function() {
 //   cell.text(value);
 // }
 
-Board.prototype.getCell = function(point) {
-  return this.grid[point.x][point.y];
+Board.prototype.getCell = function(x, y) {
+  return this.grid[x][y];
 }

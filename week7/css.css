@@ -3,61 +3,22 @@
 			font-family: sans-serif;
 		}
 
-/*		#board div {
-			font-size: 1.2em;
-			line-height: 1.2em;
-			margin: 3px;
+		.row {
+			clear:both;
 		}
-*/
-/*		.row {
-			padding: 0;
-			margin: 2;
-			line-height: 0;
-		}
-*/
+
 		.cell {
 			display:inline-block;
+			float: left;
 			border: 1px solid #ccc;
-			height: 1.4em;
-			line-height: 1.4em;
-			font-size: 1.4em;
-			width: 1.4em;
+			margin: 2px;
+			height: 30px;
+			width: 30px;
+			line-height: 30px;
 			text-align: center;
 		}
 		
 		.cell:hover {
 			border-color: black;
-		}
-		
-		.mine:after {
-			content: '\2600';
-		}
-		
-		.hasMine, .isMine {
-			/*background: #fee;*/
-		}
-		
-		.flag {
-			background: #fbb;
-		}
-		
-		.found-0, .revealed-0 {
-			color: #aaa;
-		}
-		
-		.found-1, .revealed-1 {
-			color: #282;
-		}
-		
-		.found-2, .revealed-2 {
-			color: #cc0;
-		}
-		
-		.found-3, .revealed-3 {
-			color: #22a;
-		}
-		
-		.found-4, .revealed-4 {
-			color: #822;
 		}
 	
