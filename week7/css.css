@@ -1,0 +1,69 @@
+
+		html {
+			font-family: sans-serif;
+		}
+
+		body[data-state="running"] form {
+			display: none;
+		}
+		input[type=number] {
+			width: 3em;
+		}
+
+		#board div {
+			font-size: 1.4em;
+		}
+
+		.row {
+			padding: 0;
+			margin: 2;
+			line-height: 0;
+		}
+
+		.cell {
+			display:inline-block;
+			border: 1px solid #ccc;
+			height: 1.2em;
+			line-height: 0;
+			text-align: center;
+			width: 1.2em;
+			margin: 2;
+			padding: 0;
+		}
+		
+		.cell:hover {
+			border-color: black;
+		}
+		
+		.mine:after {
+			content: '\2600';
+		}
+		
+		.hasMine, .isMine {
+			/*background: #fee;*/
+		}
+		
+		.flag {
+			background: #fbb;
+		}
+		
+		.found-0, .revealed-0 {
+			color: #aaa;
+		}
+		
+		.found-1, .revealed-1 {
+			color: #282;
+		}
+		
+		.found-2, .revealed-2 {
+			color: #cc0;
+		}
+		
+		.found-3, .revealed-3 {
+			color: #22a;
+		}
+		
+		.found-4, .revealed-4 {
+			color: #822;
+		}
+	
