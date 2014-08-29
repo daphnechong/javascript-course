@@ -12,8 +12,8 @@ var Game = function(board, bombCount) {
 
 	$('.cell').click(function(e) {
 		var coords = e.target.id.split('-');
-		var x = coords[0];
-		var y = coords[1];
+		var x = parseFloat(coords[0]);
+		var y = parseFloat(coords[1]);
 		self.board.reveal(x, y);
 	});
 	// subscribe to click events on the grid cells

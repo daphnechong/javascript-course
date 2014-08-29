@@ -91,7 +91,8 @@ Board.prototype.reveal = function(x, y) {
     if (cell.isRevealed) return;
     cell.isRevealed = true;
 
-    console.log('cell', x, y, cell.neighbouringBombCount)
+    $('#'+x+'-'+y).css('background-color', 'red')
+
     if (!cell.neighbouringBombCount) {
       var neighbours = this.getNeighbours(x, y);
       neighbours.forEach(function(n) {
