@@ -1,17 +1,14 @@
-function Missile(x, y, dx, dy, isMovingUpward) {
-	this.x = x;
-	this.y = y;
-	this.dx = dx;
-	this.dy = dy;
-	this.isMovingUpward = isMovingUpward;
+function Missile(origin, destination) {
+	this.origin = origin;
+	this.currentPosition = new Coordinate(origin.x, origin.y);
+	this.destination = destination;
+	this.dx = destination.x - origin.x;
+	this.dy = destination.y - origin.y;
+	this.segmentX = this.dx / destination.distanceFrom(origin);
+	this.segmentY = this.dy / destination.distanceFrom(origin);
 }
 
 Missile.prototype.move = function() {
-	var newX = this.isMovingUpward ? this.x - this.dx : this.x + this.dx;
-	var newY = this.isMovingUpward ? this.y - this.dy : this.y + this.dy;
-
-	return {
-		x: newX,
-		y: newY
-	}
+	this.currentPosition.y += this.segmentY;
+	this.currentPosition.x += this.segmentX;
 }

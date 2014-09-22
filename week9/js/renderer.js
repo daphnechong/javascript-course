@@ -28,14 +28,25 @@ Renderer.prototype.draw = function() {
 
 	_.each(this.game.defenceMissiles, function(item) {
 		self.drawImage(images['missile'], item.x, item.y, function(context) {
-			context.save();
-			context.beginPath();
-      context.moveTo(item.x, item.y);
-      context.lineTo(item.dx, item.dy);
-      context.stroke();
-      context.restore();
+			item.move();
+			self.drawLine(item.origin, item.currentPosition);
 		})
 	})
+
+	_.each(this.game.enemyMissiles, function(item) {
+		self.drawImage(images['missile'], item.x, item.y, function(context) {
+			self.drawLine(item.origin, item.currentPosition);
+		})
+	})
+}
+
+Renderer.prototype.drawLine = function drawLine(origin, destination) {
+	context.save();
+	context.beginPath();
+  context.moveTo(origin.x, origin.y);
+  context.lineTo(destination.x, destination.y);
+  context.stroke();
+  context.restore();
 }
 
 Renderer.prototype.drawRepeatingImage = function drawRepeatingImage(src, x, y, width, height) {

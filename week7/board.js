@@ -31,6 +31,8 @@ Board.prototype.getNeighbours = function(x, y) {
     }
   }
 
+  // you can use .filter() to get rid of the other points not in the gridSize
+
   return coords;
 }
 

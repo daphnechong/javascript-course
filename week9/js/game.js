@@ -8,6 +8,8 @@ function Game() {
  	this.enemyMissiles = [];
  	this.explosions = [];
  	this.enemyMissileCount = 10;
+ 	this.renderer = new Renderer(this);
+ 	this.start = null;
 }
 
 
@@ -19,19 +21,33 @@ Game.prototype.initialize = function() {
 	this.cities.push(new City(450, 500));
 	this.cities.push(new City(700, 490));
 
-	this.defenceMissiles.push(new Missile(80, 490, 50, 80))
-	this.step();
+	this.defenceMissiles.push(new Missile(new Coordinate(100, 100), new Coordinate(200, 200)));
+	this.defenceMissiles.push(new Missile(new Coordinate(100, 100), new Coordinate(300, 300)));
+	this.defenceMissiles.push(new Missile(new Coordinate(100, 100), new Coordinate(500, 500)));
 }
 
-Game.prototype.step = function() {
+Game.prototype.animate = function() {
 	var self = this;
-	var renderer = new Renderer(this);
-	renderer.draw();
-	// requestAnimationFrame(self.step);
+
+	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                              window.webkitRequestAnimationFrame || window.oRequestAnimationFrame;
+
+	function step(timestamp) {
+	  var progress;
+	  if (self.start === null) self.start = timestamp;
+	  progress = timestamp - self.start;
+	  self.renderer.draw();
+	  // if (progress < 3000) {
+	    requestAnimationFrame(step);
+	  // }
+	}
+
+	requestAnimationFrame(step);
 }
 
 var game = new Game();
 game.initialize();
+game.animate();
 
 // game.js
 // initialize()  { 
