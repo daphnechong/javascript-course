@@ -36,7 +36,6 @@ Renderer.prototype.draw = function() {
 
 	_.each(this.game.defenceMissiles.concat(this.game.enemyMissiles), function(item) {
 		self.drawImage(images['missile'], item.currentPosition, function(context) {
-			item.move();
 			self.drawLine(item.origin, item.currentPosition);
 		})
 	})
@@ -51,11 +50,11 @@ Renderer.prototype.drawLine = function drawLine(origin, destination) {
   context.restore();
 }
 
-Renderer.prototype.drawRepeatingImage = function drawRepeatingImage(img, coordinate, width, height) {
+Renderer.prototype.drawRepeatingImage = function drawRepeatingImage(img, x, y, width, height) {
 	context.save()
 	var pattern = context.createPattern(img, 'repeat-x');
 	context.fillStyle = pattern;
-	context.translate(coordinate.x, coordinate.y);
+	context.translate(x, y);
 	context.fillRect(0, 0, width, height);
 	context.restore();
 }

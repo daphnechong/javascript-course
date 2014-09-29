@@ -6,9 +6,15 @@ function Missile(origin, destination) {
 	this.dy = destination.y - origin.y;
 	this.segmentX = this.dx / destination.distanceFrom(origin);
 	this.segmentY = this.dy / destination.distanceFrom(origin);
+	this.totalDistance = Math.abs(destination.distanceFrom(origin));
 }
 
 Missile.prototype.move = function() {
 	this.currentPosition.y += this.segmentY;
 	this.currentPosition.x += this.segmentX;
+}
+
+Missile.prototype.hasReachedTarget = function() {
+	var distanceTravelled = Math.abs(this.currentPosition.distanceFrom(this.origin));
+	return distanceTravelled > this.totalDistance;
 }
