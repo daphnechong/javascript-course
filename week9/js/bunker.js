@@ -1,8 +1,9 @@
-function Bunker(missileCount, x, y) {
+function Bunker(missileCount, coord) {
 	this.missileCount = missileCount;
 	this.isAlive = true;
-	this.x = x;
-	this.y = y;
+	this.location = coord;
+	this.x = coord.x;
+	this.y = coord.y;
 }
 
 // Bunker.prototype = Object.create(Target.prototype, { 

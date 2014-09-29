@@ -7,34 +7,36 @@ function Renderer(game) {
 	this.game = game;
 }
 
+function loadImage(filename) {
+	var img = new Image();
+	img.src = filename;
+	return img;
+}
+
 var images = {
-	ground: 'images/ground.png',
-	bunker: 'images/bunker.png',
-	city: 'images/city.png',
-	missile: 'images/missile.png'
+	ground: loadImage('images/ground.png'),
+	bunker: loadImage('images/bunker.png'),
+	city: loadImage('images/city.png'),
+	missile: loadImage('images/missile.png')
 }
 
 Renderer.prototype.draw = function() {
 	var self = this;
+	context.clearRect(0,0, canvas.width, canvas.height);
+
 	this.drawRepeatingImage(images['ground'], 0, 495, 800, 105);
 
 	_.each(this.game.cities, function(item) {
-		self.drawImage(images['city'], item.x, item.y);
+		self.drawImage(images['city'], item.location);
 	});
 
 	_.each(this.game.bunkers, function(item) {
-		self.drawImage(images['bunker'], item.x, item.y);
+		self.drawImage(images['bunker'], item.location);
 	});
 
-	_.each(this.game.defenceMissiles, function(item) {
-		self.drawImage(images['missile'], item.x, item.y, function(context) {
+	_.each(this.game.defenceMissiles.concat(this.game.enemyMissiles), function(item) {
+		self.drawImage(images['missile'], item.currentPosition, function(context) {
 			item.move();
-			self.drawLine(item.origin, item.currentPosition);
-		})
-	})
-
-	_.each(this.game.enemyMissiles, function(item) {
-		self.drawImage(images['missile'], item.x, item.y, function(context) {
 			self.drawLine(item.origin, item.currentPosition);
 		})
 	})
@@ -49,25 +51,17 @@ Renderer.prototype.drawLine = function drawLine(origin, destination) {
   context.restore();
 }
 
-Renderer.prototype.drawRepeatingImage = function drawRepeatingImage(src, x, y, width, height) {
-	var img = new Image();
-	img.src = src;
-	img.onload = function() {
-		context.save()
-		var pattern = context.createPattern(img, 'repeat-x');
-		context.fillStyle = pattern;
-		context.translate(x, y);
-		context.fillRect(0, 0, width, height);
-		context.restore();
-	}
+Renderer.prototype.drawRepeatingImage = function drawRepeatingImage(img, coordinate, width, height) {
+	context.save()
+	var pattern = context.createPattern(img, 'repeat-x');
+	context.fillStyle = pattern;
+	context.translate(coordinate.x, coordinate.y);
+	context.fillRect(0, 0, width, height);
+	context.restore();
 }
 
-Renderer.prototype.drawImage = function drawImage(src, x, y, movement) {
-	var img = new Image();
-	img.src = src;
-	img.onload = function() {
-		context.drawImage(img, x, y);
-	}
+Renderer.prototype.drawImage = function drawImage(img, coordinate, movement) {
+	context.drawImage(img, coordinate.x, coordinate.y);
 	if (movement) {
 		movement(context);
 	}

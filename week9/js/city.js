@@ -1,6 +1,7 @@
-function City(x, y) {
+function City(coord) {
 	this.isAlive = true;
-	this.x = x;
-	this.y = y;
+	this.location = coord;
+	this.x = coord.x;
+	this.y = coord.y;
 }
 

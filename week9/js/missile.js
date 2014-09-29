@@ -1,7 +1,7 @@
 function Missile(origin, destination) {
 	this.origin = origin;
-	this.currentPosition = new Coordinate(origin.x, origin.y);
 	this.destination = destination;
+	this.currentPosition = new Coordinate(origin.x, origin.y);
 	this.dx = destination.x - origin.x;
 	this.dy = destination.y - origin.y;
 	this.segmentX = this.dx / destination.distanceFrom(origin);
