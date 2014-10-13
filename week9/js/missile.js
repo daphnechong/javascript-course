@@ -1,12 +1,14 @@
-function Missile(origin, destination) {
+function Missile(origin, endTarget) {
 	this.origin = origin;
-	this.destination = destination;
+	this.endTarget = endTarget;
+	this.destination = endTarget.location;
 	this.currentPosition = new Coordinate(origin.x, origin.y);
-	this.dx = destination.x - origin.x;
-	this.dy = destination.y - origin.y;
-	this.segmentX = this.dx / destination.distanceFrom(origin);
-	this.segmentY = this.dy / destination.distanceFrom(origin);
-	this.totalDistance = Math.abs(destination.distanceFrom(origin));
+	this.dx = this.destination.x - origin.x;
+	this.dy = this.destination.y - origin.y;
+	this.isAlive = true;
+	this.segmentX = this.dx / this.destination.distanceFrom(origin);
+	this.segmentY = this.dy / this.destination.distanceFrom(origin);
+	this.totalDistance = Math.abs(this.destination.distanceFrom(origin));
 }
 
 Missile.prototype.move = function() {

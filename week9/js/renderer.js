@@ -16,8 +16,7 @@ function loadImage(filename) {
 var images = {
 	ground: loadImage('images/ground.png'),
 	bunker: loadImage('images/bunker.png'),
-	city: loadImage('images/city.png'),
-	missile: loadImage('images/missile.png')
+	city: loadImage('images/city.png')
 }
 
 Renderer.prototype.draw = function() {
@@ -34,10 +33,13 @@ Renderer.prototype.draw = function() {
 		self.drawImage(images['bunker'], item.location);
 	});
 
+	_.each(this.game.explosions, function(item) {
+		self.drawExplosion(item);
+	});
+
 	_.each(this.game.defenceMissiles.concat(this.game.enemyMissiles), function(item) {
-		self.drawImage(images['missile'], item.currentPosition, function(context) {
-			self.drawLine(item.origin, item.currentPosition);
-		})
+		self.drawMissile(item.currentPosition);
+		self.drawLine(item.origin, item.currentPosition);
 	})
 }
 
@@ -65,3 +67,21 @@ Renderer.prototype.drawImage = function drawImage(img, coordinate, movement) {
 		movement(context);
 	}
 };
+
+Renderer.prototype.drawMissile = function drawMissile(coordinate) {
+	context.save();
+	context.beginPath();
+  context.arc(coordinate.x, coordinate.y, 3, 0, 2 * Math.PI, false);
+  context.fillStyle = 'red';
+  context.fill();
+  context.restore();
+}
+
+Renderer.prototype.drawExplosion = function drawExplosion(explosion) {
+	context.save();
+	context.beginPath();
+  context.arc(explosion.location.x, explosion.location.y, explosion.radius, 0, 2 * Math.PI, false);
+  context.fillStyle = 'red';
+  context.fill();
+  context.restore();
+}

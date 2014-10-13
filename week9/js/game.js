@@ -1,6 +1,4 @@
 
-
-
 function Game() {
  	this.bunkers = [];
  	this.cities = [];
@@ -15,10 +13,11 @@ function Game() {
 Game.prototype.selectRandomTarget = function() {
 	var targets = this.bunkers.concat(this.cities);
 	var item = targets[Math.floor(Math.random()*targets.length)];
-	return item.location;
+	return item;
 }
 
 Game.prototype.initialize = function() {
+	var self = this;
 	this.bunkers.push(new Bunker(5, new Coordinate(80, 490)));
 	this.bunkers.push(new Bunker(5, new Coordinate(320, 480)));
 	this.bunkers.push(new Bunker(5, new Coordinate(600, 510)));
@@ -26,8 +25,14 @@ Game.prototype.initialize = function() {
 	this.cities.push(new City(new Coordinate(450, 500)));
 	this.cities.push(new City(new Coordinate(700, 490)));
 
-	this.enemyMissiles.push(new Missile(new Coordinate(0, 0), this.selectRandomTarget()));
-	this.enemyMissiles.push(new Missile(new Coordinate(0, 0), this.selectRandomTarget()));
+	// Rx.Observable.interval(1000).subscribe(function() { 
+	// 	self.enemyMissiles.push(new Missile(new Coordinate(0, 0), self.selectRandomTarget()));
+	// });
+
+	var missile = new Missile(new Coordinate(0, 0), this.selectRandomTarget());
+	console.log(missile);
+	this.enemyMissiles.push(missile);
+	
 	this.enemyMissiles.push(new Missile(new Coordinate(0, 0), this.selectRandomTarget()));
 }
 
@@ -42,34 +47,53 @@ Game.prototype.animate = function() {
 	  if (self.start === null) self.start = timestamp;
 	  progress = timestamp - self.start;
 
-	  _.each(self.enemyMissiles.concat(self.defenceMissiles), function(item) {
-	  	if (!item.hasReachedTarget()) {
-		  	item.move();
-		  }
-	  });
+	  self.moveAll(self.enemyMissiles, function(item) { 
+	  	self.explosions.push(new Explosion(item.currentPosition)); 
+	  	item.endTarget.isAlive = false;
+	  })
+	  self.moveAll(self.explosions);
+
+
+	  self.updateAll(self.explosions);
+	  self.updateAll(self.enemyMissiles);
+	  self.updateAll(self.defenceMissiles);
+	  self.updateAll(self.bunkers);
+	  self.updateAll(self.cities);
 
 	  self.renderer.draw();
-	  // if (progress < 3000) {
 	  requestAnimationFrame(step);
-	  // }
 	}
 
 	requestAnimationFrame(step);
 }
 
+Game.prototype.moveAll = function moveAll(collection, additionalStep) {
+ 	for (var i = 0; i < collection.length; i++) {
+		var item = collection[i];
+
+		if (!item.hasReachedTarget()) {
+	  	item.move();
+	  } 
+	  else {
+	  	item.isAlive = false;
+	  	if (additionalStep) {
+	  		additionalStep(item);
+	  	}
+  	}
+	}
+}
+Game.prototype.updateAll = function updateAll(collection) {
+	 for (var i = 0; i < collection.length; i++) {
+  	var item = collection[i];
+
+  	if (!item.isAlive) {
+	 	 	var index = collection.indexOf(item);
+  		collection.splice(index, 1);
+	  	i--;
+  	}
+  }
+}
+
 var game = new Game();
 game.initialize();
 game.animate();
-
-// game.js
-// initialize()  { 
-	// create models
-	// step();
-// }
-
-
-// step() {
-// 	update models
-// 	if (renderer.draw(this))
-// 		requestAnimationFrame(step);
-// }
