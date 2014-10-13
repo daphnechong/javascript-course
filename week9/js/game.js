@@ -25,15 +25,10 @@ Game.prototype.initialize = function() {
 	this.cities.push(new City(new Coordinate(450, 500)));
 	this.cities.push(new City(new Coordinate(700, 490)));
 
-	// Rx.Observable.interval(1000).subscribe(function() { 
-	// 	self.enemyMissiles.push(new Missile(new Coordinate(0, 0), self.selectRandomTarget()));
-	// });
-
-	var missile = new Missile(new Coordinate(0, 0), this.selectRandomTarget());
-	console.log(missile);
-	this.enemyMissiles.push(missile);
-	
-	this.enemyMissiles.push(new Missile(new Coordinate(0, 0), this.selectRandomTarget()));
+	Rx.Observable.interval(2000).subscribe(function() { 
+		var x = Math.floor(Math.random() * 800);
+		self.enemyMissiles.push(new Missile(new Coordinate(x, 0), self.selectRandomTarget()));
+	});
 }
 
 Game.prototype.animate = function() {
@@ -82,6 +77,7 @@ Game.prototype.moveAll = function moveAll(collection, additionalStep) {
   	}
 	}
 }
+
 Game.prototype.updateAll = function updateAll(collection) {
 	 for (var i = 0; i < collection.length; i++) {
   	var item = collection[i];
