@@ -27,8 +27,19 @@ Game.prototype.initialize = function() {
 
 	Rx.Observable.interval(2000).subscribe(function() { 
 		var x = Math.floor(Math.random() * 800);
-		self.enemyMissiles.push(new Missile(new Coordinate(x, 0), self.selectRandomTarget()));
+		var target =  self.selectRandomTarget();
+		self.enemyMissiles.push(new Missile(new Coordinate(x, 0), target.location, target));
 	});
+
+	Rx.Observable.fromEvent(document, 'click').subscribe(function(e) {
+		var target = new Coordinate(e.x, e.y);
+		console.log(self.bunkers[0].location)
+		var missile = new Missile(self.bunkers[0].location, target);
+		self.defenceMissiles.push(missile);
+		console.log(missile);
+		console.log(self.defenceMissiles);
+
+	})
 }
 
 Game.prototype.animate = function() {
@@ -43,9 +54,10 @@ Game.prototype.animate = function() {
 	  progress = timestamp - self.start;
 
 	  self.moveAll(self.enemyMissiles, function(item) { 
-	  	self.explosions.push(new Explosion(item.currentPosition)); 
+	  	self.explosions.push(new Explosion(item.location)); 
 	  	item.endTarget.isAlive = false;
-	  })
+	  });
+	  self.moveAll(self.defenceMissiles);
 	  self.moveAll(self.explosions);
 
 
@@ -66,6 +78,10 @@ Game.prototype.moveAll = function moveAll(collection, additionalStep) {
  	for (var i = 0; i < collection.length; i++) {
 		var item = collection[i];
 
+		// var targets = self.explosions.concat(self.enemyMissiles).concat(self.defenceMissiles).concat(self.bunkers).concat(self.cities);
+		// todo: change this so that you have all items in an array called targets.
+
+		
 		if (!item.hasReachedTarget()) {
 	  	item.move();
 	  } 

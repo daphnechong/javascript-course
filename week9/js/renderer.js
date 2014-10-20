@@ -38,9 +38,9 @@ Renderer.prototype.draw = function() {
 	});
 
 	_.each(this.game.defenceMissiles.concat(this.game.enemyMissiles), function(item) {
-		self.drawMissile(item.currentPosition);
-		self.drawLine(item.origin, item.currentPosition);
-	})
+		self.drawMissile(item.location);
+		self.drawLine(item.origin, item.location);
+	});
 }
 
 Renderer.prototype.drawLine = function drawLine(origin, destination) {
