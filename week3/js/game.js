@@ -57,14 +57,17 @@ Game.prototype.nextGameTick = function() {
 	endGameIfSnakeRunsIntoItself(nextPoint);
 
 	var isFoodEaten = isFood(nextPoint);
-	if (isFoodEaten) { 
-		self.placeNewFood();
-	}
-
 	var oldTail = self.snake.move(isFoodEaten);
 	var oldSymbol = isFoodEaten ? self.snake.symbol : ' ';
 
-	self.board.setCell(oldTail, oldSymbol);
+	if (isFoodEaten) {
+		self.placeNewFood();
+		self.board.setCell(oldTail, self.snake.symbol);
+		self.board.clearCell(nextPoint);
+		self.board.setCell(nextPoint, self.snake.symbol);
+	} else {
+		self.board.clearCell(oldTail);
+	}
 	self.board.setCell(nextPoint, self.snake.symbol);	
 }
 

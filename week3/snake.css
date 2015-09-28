@@ -1,7 +1,8 @@
+
 .cell {
 	width:15px;
 	height: 15px;
-	border: 1px solid black;
+	border: 1px solid #d0d0d0;
 	display:inline-block;
 	line-height: 10px;
 	text-align: center;
@@ -14,4 +15,17 @@
 
 .endgame {
 	background: red;
+}
+
+.o {
+	background: #303030;
+}
+
+.x {
+	background: orange;
+}
+
+.c {
+	background: inherit;
+
 }
