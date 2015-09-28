@@ -26,11 +26,19 @@ Board.prototype.setCell = function(point, value) {
 	this.grid[point.x][point.y] = value;
 	var row = $('.row').eq(point.y);
 	var cell = row.find('.cell').eq(point.x);
-	cell.text(value);
+	cell.addClass(value);
 }
 
 Board.prototype.getCell = function(point) {
 	return this.grid[point.x][point.y];
+}
+
+Board.prototype.clearCell = function(point){
+	this.grid[point.x][point.y] = ' ';
+	var row = $('.row').eq(point.y);
+	var cell = row.find('.cell').eq(point.x);
+	cell.removeClass('x');
+	cell.removeClass('o');
 }
 
 Board.prototype.getRandomEmptyCell = function() {
