@@ -23,7 +23,7 @@ Game.prototype.setup = function() {
 		$('body').keydown(function(e) {
 			if (!isArrowKey(e)) return;
 
-			var newDirection = e.originalEvent.keyIdentifier.toLowerCase();
+			var newDirection = e.key.toLowerCase();
 			self.snake.changeDirection(newDirection);
 		});
 	}
