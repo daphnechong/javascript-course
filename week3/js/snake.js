@@ -46,12 +46,12 @@ Snake.prototype.move = function(isGrowing) {
 Snake.prototype.changeDirection = function(newDirection) {
 
 	var isDirectionAllowed = !(
-		newDirection == 'down' && this.direction == 'up' ||
-		newDirection == 'up' && this.direction == 'down' ||
-		newDirection == 'left' && this.direction == 'right' ||
-		newDirection == 'right' && this.direction == 'left');
+		newDirection == 'arrowdown' && this.direction == 'up' ||
+		newDirection == 'arrowup' && this.direction == 'down' ||
+		newDirection == 'arrowleft' && this.direction == 'right' ||
+		newDirection == 'arrowright' && this.direction == 'left');
 
 	if (isDirectionAllowed) {
-		this.direction = newDirection;
+		this.direction = newDirection.replace("arrow", "");
 	}
 }
